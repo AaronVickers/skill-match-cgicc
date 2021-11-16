@@ -1,11 +1,14 @@
-// Include initialised headers
-#include "cgicc-init.h"
-#include "mysql-init.h"
+// Initialised headers
+#include "CgiccInit.h"
+#include "MySqlInit.h"
+
+// CGICC headers
+#include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTMLClasses.h"
 
 // Use required namespaces
 using namespace std;
-using namespace cgiccInit;
-using namespace mysqlInit;
+using namespace cgicc;
 
 // Entry function
 int main(int argc, char *argv[]) {

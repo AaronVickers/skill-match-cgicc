@@ -1,23 +1,23 @@
-// Include initialised headers
-#include "cgicc-init.h"
-// #include "mysql-init.h"
+// Initialised headers
+#include "CgiccInit.h"
+#include "MySqlInit.h"
+
+// CGICC headers
+#include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTMLClasses.h"
 
 // Use required namespaces
 using namespace std;
-using namespace cgiccInit;
-// using namespace mysqlInit;
+using namespace cgicc;
 
 // Entry function
 int main(int argc, char *argv[]) {
-    Cgicc cgi;
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Test")) << endl;
-    cout << body();
-    cout << body() << html();
-/*
+    // Initialise CGICC environment
+    CgiccInit *cgi = new CgiccInit();
+
     // Required response data
     cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Register")) << endl;
+    cout << html() << head(title("Login")) << endl;
     cout << body();
 
     // Form for login
@@ -61,6 +61,5 @@ int main(int argc, char *argv[]) {
     // End of response
     cout << body() << html();
 
-*/
     return 0;
 }
