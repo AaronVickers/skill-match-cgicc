@@ -1,15 +1,19 @@
-// Include initialised header
-#include "mysql-init.h"
+// Initialised header
+#include "MySqlInit.h"
+
+// MySQL headers
+#include <cppconn/statement.h>
+#include <cppconn/resultset.h>
 
 // Use required namespaces
 using namespace std;
-using namespace mysqlInit;
 
 // Entry function
 int main(int argc, char *argv[]) {
-    sqlConn->setSchema("coursework");
+    // Initialise MySQL connection
+    MySqlInit *db = new MySqlInit();
 
-    sql::Statement *stmt = sqlConn->createStatement();
+    sql::Statement *stmt = db->conn->createStatement();
     sql::ResultSet *res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
 
     while (res->next()) {

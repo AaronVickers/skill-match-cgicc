@@ -2,14 +2,17 @@ CXX = g++
 CXXFLAGS = -std=c++14
 LDFLAGS = -lcgicc -lmysqlcppconn
 
-all: login.cgi register.cgi
+all: login.cgi register.cgi database.out
 
-login.cgi: login.cpp cgicc-init.h mysql-init.h
-	$(CXX) $(CXXFLAGS) login.cpp -o login.cgi $(LDFLAGS)
+login.cgi: login.cpp CgiccInit.cpp MySqlInit.cpp
+	$(CXX) $(CXXFLAGS) login.cpp CgiccInit.cpp MySqlInit.cpp -o login.cgi $(LDFLAGS)
 
-register.cgi: register.cpp cgicc-init.h mysql-init.h
-	$(CXX) $(CXXFLAGS) register.cpp -o register.cgi $(LDFLAGS)
+register.cgi: register.cpp CgiccInit.cpp MySqlInit.cpp
+	$(CXX) $(CXXFLAGS) register.cpp CgiccInit.cpp MySqlInit.cpp -o register.cgi $(LDFLAGS)
+
+database.out: database.cpp MySqlInit.cpp
+	$(CXX) $(CXXFLAGS) database.cpp MySqlInit.cpp -o database.out -lmysqlcppconn
 
 .PHONY: clean
 clean:
-	-rm -f *.cgi 
+	-rm -f *.cgi *.out
