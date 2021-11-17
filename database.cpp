@@ -13,15 +13,20 @@ int main(int argc, char *argv[]) {
     // Initialise MySQL connection
     MySqlInit *db = new MySqlInit();
 
+    if (db->success == false) {
+        cout << "Failed to connect to database.\nError: " << db->error_msg << endl;
+
+        return 0;
+    }
+
     sql::Statement *stmt = db->conn->createStatement();
     sql::ResultSet *res = stmt->executeQuery("SELECT 'Hello World!' AS _message");
 
     while (res->next()) {
         cout << "\t... MySQL replies: ";
-
         cout << res->getString("_message") << endl;
-        cout << "\t... MySQL says it again: ";
 
+        cout << "\t... MySQL says it again: ";
         cout << res->getString(1) << endl;
     }
 
