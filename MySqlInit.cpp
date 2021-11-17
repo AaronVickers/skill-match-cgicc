@@ -8,9 +8,9 @@
 MySqlInit::MySqlInit() {
     try {
         driver = get_driver_instance();
-        conn = driver->connect(DB_ADDR, DB_USER, DB_PASS);
+        conn = driver->connect(DB_HOST, DB_USER, DB_PASS);
 
-        conn->setSchema("coursework");
+        conn->setSchema(DB_NAME);
 
         success = true;
     } catch (sql::SQLException &sql_error) {
