@@ -10,8 +10,8 @@ login.cgi: login.cpp CgiccInit.cpp MySqlInit.cpp
 register.cgi: register.cpp CgiccInit.cpp MySqlInit.cpp
 	$(CXX) $(CXXFLAGS) register.cpp CgiccInit.cpp MySqlInit.cpp -o register.cgi $(LDFLAGS)
 
-database.out: database.cpp MySqlInit.cpp
-	$(CXX) $(CXXFLAGS) database.cpp MySqlInit.cpp -o database.out -lmysqlcppconn
+database.out: database.cpp
+	$(CXX) $(CXXFLAGS) database.cpp -o database.out -lmysqlcppconn
 
 .PHONY: clean
 clean:
