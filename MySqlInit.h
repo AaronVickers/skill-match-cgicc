@@ -3,9 +3,10 @@
 #define MYSQL_INIT_H_
 
 // Define environment variables
-#define DB_ADDR "tcp://127.0.0.1:3306"
+#define DB_HOST "tcp://127.0.0.1:3306"
 #define DB_USER "root"
 #define DB_PASS "root"
+#define DB_NAME "coursework"
 
 // MySQL headers
 #include "mysql_driver.h"
