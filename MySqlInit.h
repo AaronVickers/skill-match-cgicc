@@ -18,6 +18,9 @@ class MySqlInit {
 private:
     sql::Driver *driver;
 public:
+    bool success;
+    std::string error_msg;
+
     sql::Connection *conn;
 
     // Constructor

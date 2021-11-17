@@ -2,4 +2,6 @@
 #include "CgiccInit.h"
 
 // Constructor
-// CgiccInit::CgiccInit() {}
+CgiccInit::CgiccInit() {
+    success = true;
+}

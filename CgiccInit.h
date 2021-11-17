@@ -11,10 +11,13 @@ class CgiccInit {
 private:
     cgicc::Cgicc cgi;
 public:
+    bool success;
+    std::string error_msg;
+
     const cgicc::CgiEnvironment &env = cgi.getEnvironment();
 
     // Constructor
-    // CgiccInit();
+    CgiccInit();
 };
 
 // End of header guard
