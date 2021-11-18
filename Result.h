@@ -8,7 +8,10 @@
 // Result class structure
 class Result {
 public:
+    // Success status
     bool success;
+    
+    // Error message
     std::string errorMsg;
 };
 
