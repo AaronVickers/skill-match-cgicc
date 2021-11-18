@@ -3,5 +3,6 @@
 
 // Constructor
 CgiccInit::CgiccInit() {
+    // Set success to true
     success = true;
 }

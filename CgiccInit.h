@@ -9,11 +9,14 @@
 // CgiccInit class structure
 class CgiccInit {
 private:
+    // Cgicc instance
     cgicc::Cgicc cgi;
 public:
+    // Success status and error message for initialisation
     bool success;
     std::string error_msg;
 
+    // Cgicc environment
     const cgicc::CgiEnvironment &env = cgi.getEnvironment();
 
     // Constructor

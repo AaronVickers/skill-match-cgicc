@@ -7,13 +7,17 @@
 // Constructor
 MySqlInit::MySqlInit() {
     try {
+        // Connect to database
         driver = get_driver_instance();
         conn = driver->connect(DB_HOST, DB_USER, DB_PASS);
 
+        // Set schema to use
         conn->setSchema(DB_NAME);
 
+        // Set success to true
         success = true;
     } catch (sql::SQLException &sql_error) {
+        // Set success to false and store error
         success = false;
         error_msg = sql_error.what();
     }

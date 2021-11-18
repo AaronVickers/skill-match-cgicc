@@ -17,11 +17,14 @@
 // MySqlInit class structure
 class MySqlInit {
 private:
+    // SQL driver
     sql::Driver *driver;
 public:
+    // Success status and error message for initialisation
     bool success;
     std::string error_msg;
 
+    // SQL connection to database
     sql::Connection *conn;
 
     // Constructor
