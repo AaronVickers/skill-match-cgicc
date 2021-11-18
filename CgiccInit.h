@@ -6,16 +6,15 @@
 #include "cgicc/Cgicc.h"
 #include "cgicc/CgiEnvironment.h"
 
+// Required headers
+#include "Result.h"
+
 // CgiccInit class structure
-class CgiccInit {
+class CgiccInit: public Result {
 private:
     // Cgicc instance
     cgicc::Cgicc cgi;
 public:
-    // Success status and error message for initialisation
-    bool success;
-    std::string errorMsg;
-
     // Cgicc environment
     const cgicc::CgiEnvironment &env = cgi.getEnvironment();
 

@@ -6,6 +6,9 @@
 #include "cgicc/HTTPHTMLHeader.h"
 #include "cgicc/HTMLClasses.h"
 
+// Required headers
+#include "Authentication.h"
+
 // Use required namespaces
 using namespace std;
 using namespace cgicc;

@@ -14,16 +14,15 @@
 #include <cppconn/driver.h>
 #include <cppconn/connection.h>
 
+// Required headers
+#include "Result.h"
+
 // MySqlInit class structure
-class MySqlInit {
+class MySqlInit: public Result {
 private:
     // SQL driver
     sql::Driver *driver;
 public:
-    // Success status and error message for initialisation
-    bool success;
-    std::string errorMsg;
-
     // SQL connection to database
     sql::Connection *conn;
 
