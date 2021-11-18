@@ -22,7 +22,7 @@ private:
 public:
     // Success status and error message for initialisation
     bool success;
-    std::string error_msg;
+    std::string errorMsg;
 
     // SQL connection to database
     sql::Connection *conn;
