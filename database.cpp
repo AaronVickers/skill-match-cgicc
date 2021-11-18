@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Initialise MySQL connection
-    MySqlInit *db = new MySqlInit();
+    MySqlInit db = MySqlInit();
 
     // Handle connection error
     if (db->success == false) {
@@ -146,6 +146,10 @@ int main(int argc, char *argv[]) {
             pstmt->setString(1, role);
             pstmt->execute();
         }
+
+        // Delete statements from memory
+        delete stmt;
+        delete pstmt;
 
         // Notify user that operation was completed
         cout << "Operation complete." << endl;
