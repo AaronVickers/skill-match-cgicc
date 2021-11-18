@@ -91,15 +91,15 @@ int main(int argc, char *argv[]) {
             ); \
         ");
 
-        // Create 'MFAuthentication' table
+        // Create 'TFAuthentication' table
         stmt->execute(" \
-            CREATE TABLE MFAuthentication ( \
-                MFAuthenticationId INT NOT NULL AUTO_INCREMENT, \
+            CREATE TABLE TFAuthentication ( \
+                TFAuthenticationId INT NOT NULL AUTO_INCREMENT, \
                 UserId INT NOT NULL, \
                 Token VARCHAR(128) NOT NULL, \
                 Code VARCHAR(6) NOT NULL, \
                 StartTime DATETIME NOT NULL, \
-                PRIMARY KEY (MFAuthenticationId), \
+                PRIMARY KEY (TFAuthenticationId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \
         ");
