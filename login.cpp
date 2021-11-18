@@ -54,9 +54,9 @@ int main(int argc, char *argv[]) {
     loginForm.add(a("Register")
         .set("href", "./register.cgi")
     );
+
     // Display login form
     cout << loginForm;
-
 
     // End of response
     cout << body() << html();
