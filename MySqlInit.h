@@ -29,6 +29,9 @@ public:
 
     // Constructor
     MySqlInit();
+
+    // Destructor
+    ~MySqlInit();
 };
 
 // End of header guard

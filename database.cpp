@@ -25,6 +25,11 @@ MySqlInit::MySqlInit() {
     }
 }
 
+// MySqlInit destructor
+MySqlInit::~MySqlInit() {
+    delete conn;
+}
+
 // Entry function
 int main(int argc, char *argv[]) {
     // Vector of roles
@@ -49,8 +54,8 @@ int main(int argc, char *argv[]) {
     MySqlInit db = MySqlInit();
 
     // Handle connection error
-    if (db->success == false) {
-        cout << "Failed to connect to database.\nError: " << db->errorMsg << endl;
+    if (db.success == false) {
+        cout << "Failed to connect to database.\nError: " << db.errorMsg << endl;
 
         return 0;
     }
@@ -58,7 +63,7 @@ int main(int argc, char *argv[]) {
     // Attempt to complete operation
     try {
         // SQL statement variables
-        sql::Statement *stmt = db->conn->createStatement();
+        sql::Statement *stmt = db.conn->createStatement();
         sql::PreparedStatement *pstmt;
 
         // Drop and create database
@@ -66,7 +71,7 @@ int main(int argc, char *argv[]) {
         stmt->execute("CREATE DATABASE " DB_NAME ";");
 
         // Set schema to new database
-        db->conn->setSchema(DB_NAME);
+        db.conn->setSchema(DB_NAME);
 
         // Create 'Roles' table
         stmt->execute(" \
@@ -139,7 +144,7 @@ int main(int argc, char *argv[]) {
         ");
 
         // Prepare role insertion statement
-        pstmt = db->conn->prepareStatement("INSERT INTO Roles (Name) VALUES (?)");
+        pstmt = db.conn->prepareStatement("INSERT INTO Roles (Name) VALUES (?)");
 
         // Populate 'Roles' table
         for (auto role: roles) {
