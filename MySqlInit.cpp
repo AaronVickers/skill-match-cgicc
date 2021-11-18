@@ -22,3 +22,8 @@ MySqlInit::MySqlInit() {
         errorMsg = sql_error.what();
     }
 }
+
+// Destructor
+MySqlInit::~MySqlInit() {
+    delete conn;
+}
