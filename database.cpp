@@ -21,7 +21,7 @@ MySqlInit::MySqlInit() {
         success = true;
     } catch (sql::SQLException &sql_error) {
         success = false;
-        error_msg = sql_error.what();
+        errorMsg = sql_error.what();
     }
 }
 
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
     // Handle connection error
     if (db->success == false) {
-        cout << "Failed to connect to database.\nError: " << db->error_msg << endl;
+        cout << "Failed to connect to database.\nError: " << db->errorMsg << endl;
 
         return 0;
     }
@@ -91,14 +91,15 @@ int main(int argc, char *argv[]) {
             ); \
         ");
 
-        // Create 'Authentication' table
+        // Create 'MFAuthentication' table
         stmt->execute(" \
-            CREATE TABLE Authentication ( \
-                AuthenticationId INT NOT NULL AUTO_INCREMENT, \
+            CREATE TABLE MFAuthentication ( \
+                MFAuthenticationId INT NOT NULL AUTO_INCREMENT, \
                 UserId INT NOT NULL, \
+                Token VARCHAR(128) NOT NULL, \
                 Code VARCHAR(6) NOT NULL, \
                 StartTime DATETIME NOT NULL, \
-                PRIMARY KEY (AuthenticationId), \
+                PRIMARY KEY (MFAuthenticationId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \
         ");

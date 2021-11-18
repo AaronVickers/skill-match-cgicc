@@ -14,7 +14,7 @@ private:
 public:
     // Success status and error message for initialisation
     bool success;
-    std::string error_msg;
+    std::string errorMsg;
 
     // Cgicc environment
     const cgicc::CgiEnvironment &env = cgi.getEnvironment();
