@@ -19,6 +19,6 @@ MySqlInit::MySqlInit() {
     } catch (sql::SQLException &sql_error) {
         // Set success to false and store error
         success = false;
-        error_msg = sql_error.what();
+        errorMsg = sql_error.what();
     }
 }
