@@ -1,4 +1,4 @@
-// Initialised header
+// Initialised MySQL header
 #include "MySqlInit.h"
 
 // MySQL headers
