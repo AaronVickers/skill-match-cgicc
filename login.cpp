@@ -13,7 +13,7 @@ using namespace cgicc;
 // Entry function
 int main(int argc, char *argv[]) {
     // Initialise CGICC environment
-    CgiccInit *cgi = new CgiccInit();
+    CgiccInit cgi = CgiccInit();
 
     // Required response data
     cout << HTTPHTMLHeader() << endl;

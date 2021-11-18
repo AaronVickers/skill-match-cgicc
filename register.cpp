@@ -12,6 +12,9 @@ using namespace cgicc;
 
 // Entry function
 int main(int argc, char *argv[]) {
+    // Initialise CGICC environment
+    CgiccInit cgi = CgiccInit();
+
     // Required response data
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head(title("Register")) << endl;
