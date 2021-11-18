@@ -6,13 +6,16 @@
 #include <string>
 #include "Result.h"
 
+// Login result class structure
 class LoginResult: public Result {
 public:
-    std::string token;
+    std::string TFAToken;
 };
+
+// 2FA result class structure
 class TFAResult: public Result {
 public:
-    std::string token;
+    std::string sessionToken;
 };
 
 // Authentication class structure
