@@ -21,7 +21,7 @@ AUTHENTICATION_CPP = Utils/Authentication.cpp
 AUTHENTICATION_HPP = Utils/Authentication.hpp
 
 # All output files
-all: login.cgi register.cgi tfa.cgi database.out
+all: login.cgi register.cgi tfa.cgi populate-database.out
 
 # Login CGI file
 login.cgi: $(LOGIN_CPP) CgiccInit.o MySqlInit.o Authentication.o
