@@ -1,5 +1,5 @@
 // Initialised MySQL header
-#include "Utils/MySqlInit.h"
+#include "Utils/MySqlInit.hpp"
 
 // MySQL headers
 #include <cppconn/exception.h>
