@@ -93,6 +93,7 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     return registerResult;
 }
 
+/*
 UserResult Authentication::getUserFromSessionToken(std::string sessionToken) {
     // Create result
     UserResult userResult = UserResult();
@@ -107,3 +108,4 @@ UserResult Authentication::getUserFromSessionToken(std::string sessionToken) {
     // Return result
     return userResult;
 }
+*/
