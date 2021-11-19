@@ -4,7 +4,7 @@
 
 // Required headers
 #include <string>
-#include "Result.h"
+#include "Utils/Result.h"
 
 // Login result class structure
 class LoginResult: public Result {

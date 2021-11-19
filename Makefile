@@ -1,38 +1,55 @@
+# Library flags
+LIB_CGICC = -lcgicc
+LIB_MYSQL = -lmysqlcppconn
+
 # Compiler options
 CXX = g++
 CXXFLAGS = -std=c++14
-LDFLAGS = -lcgicc -lmysqlcppconn
+LDFLAGS = $(LIB_CGICC) $(LIB_MYSQL)
+INC_DIRS = -I.
+
+# File locations
+LOGIN_CPP = Pages/login.cpp
+REGISTER_CPP = Pages/register.cpp
+TFA_CPP = Pages/tfa.cpp
+DATABASE_CPP = Tools/database.cpp
+CGICCINIT_CPP = Utils/CgiccInit.cpp
+CGICCINIT_H = Utils/CgiccInit.h
+MYSQLINIT_CPP = Utils/MySqlInit.cpp
+MYSQLINIT_H = Utils/MySqlInit.h
+AUTHENTICATION_CPP = Utils/Authentication.cpp
+AUTHENTICATION_H = Utils/Authentication.h
 
 # All output files
 all: login.cgi register.cgi tfa.cgi database.out
 
 # Login CGI file
-login.cgi: login.cpp CgiccInit.o MySqlInit.o Authentication.o
-	$(CXX) $(CXXFLAGS) login.cpp CgiccInit.o MySqlInit.o Authentication.o -o login.cgi $(LDFLAGS)
+login.cgi: $(LOGIN_CPP) CgiccInit.o MySqlInit.o Authentication.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) CgiccInit.o MySqlInit.o Authentication.o -o $@ $(LDFLAGS)
 
 # Register CGI file
-register.cgi: register.cpp CgiccInit.o MySqlInit.o Authentication.o
-	$(CXX) $(CXXFLAGS) register.cpp CgiccInit.o MySqlInit.o Authentication.o -o register.cgi $(LDFLAGS)
+register.cgi: $(REGISTER_CPP) CgiccInit.o MySqlInit.o Authentication.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) CgiccInit.o MySqlInit.o Authentication.o -o $@ $(LDFLAGS)
 
 # 2FA CGI file
-tfa.cgi: tfa.cpp CgiccInit.o MySqlInit.o Authentication.o
-	$(CXX) $(CXXFLAGS) tfa.cpp CgiccInit.o MySqlInit.o Authentication.o -o tfa.cgi $(LDFLAGS)
+tfa.cgi: $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o -o $@ $(LDFLAGS)
 
 # Database population file
-database.out: database.cpp
-	$(CXX) $(CXXFLAGS) database.cpp -o database.out -lmysqlcppconn
+database.out: $(DATABASE_CPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(DATABASE_CPP) -o $@ $(LIB_MYSQL)
 
 # CgiccInit object file
-CgiccInit.o: CgiccInit.cpp CgiccInit.h
-	$(CXX) $(CXXFLAGS) CgiccInit.cpp -c
+CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_H)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGICCINIT_CPP) -c -o $@
 
 # MySqlInit object file
-MySqlInit.o: MySqlInit.cpp MySqlInit.h
-	$(CXX) $(CXXFLAGS) MySqlInit.cpp -c
+MySqlInit.o: $(MYSQLINIT_CPP) $(MYSQLINIT_H)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(MYSQLINIT_CPP) -c -o $@
 
 # Authentication object file
-Authentication.o: Authentication.cpp Authentication.h
-	$(CXX) $(CXXFLAGS) Authentication.cpp -c
+Authentication.o: $(AUTHENTICATION_CPP) $(AUTHENTICATION_H)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(AUTHENTICATION_CPP) -c -o $@
 
 # Remove output files
 .PHONY: clean

@@ -1,5 +1,5 @@
 // Include header file
-#include "CgiccInit.h"
+#include "Utils/CgiccInit.h"
 
 // Constructor
 CgiccInit::CgiccInit() {

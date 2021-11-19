@@ -1,13 +1,13 @@
 // Initialised headers
-#include "CgiccInit.h"
-#include "MySqlInit.h"
+#include "Utils/CgiccInit.h"
+#include "Utils/MySqlInit.h"
 
 // CGICC headers
 #include "cgicc/HTTPHTMLHeader.h"
 #include "cgicc/HTMLClasses.h"
 
 // Required headers
-#include "Authentication.h"
+#include "Utils/Authentication.h"
 
 // Use required namespaces
 using namespace std;

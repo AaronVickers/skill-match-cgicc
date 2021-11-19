@@ -15,7 +15,7 @@
 #include <cppconn/connection.h>
 
 // Required headers
-#include "Result.h"
+#include "Utils/Result.h"
 
 // MySqlInit class structure
 class MySqlInit: public Result {
