@@ -23,7 +23,7 @@ public:
     std::string getUsername();
     std::string getEmail();
     int getRoleId();
-    Role* getRole();
+    Role getRole();
 
     User(int userId);
     User(
@@ -38,7 +38,7 @@ public:
 // Users class structure
 class Users {
 public:
-    User* getUserByUserId(int userId);
+    User getUserByUserId(int userId);
 };
 
 // End of header guard

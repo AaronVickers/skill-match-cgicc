@@ -33,9 +33,9 @@ private:
 public:
     int getSkillSearchId();
     int getSkillId();
-    Skill* getSkill();
+    Skill getSkill();
     int getUserId();
-    User* getUser();
+    User getUser();
     bool getApprovedState();
 
     bool setApprovedState(bool newApprovedState);
@@ -47,18 +47,18 @@ public:
 // Skills class structure
 class Skills {
 public:
-    Skill* getSkillBySkillId(int skillId);
-    Skill* getSkillBySkillName(std::string name);
+    Skill getSkillBySkillId(int skillId);
+    Skill getSkillBySkillName(std::string name);
 
     SkillSearch getSkillSearchBySkillSearchId(int skillSearchId);
 
-    std::vector<User*> getApprovedApplicantSkillSearchesBySkillName(std::string name);
-    std::vector<User*> getApprovedCompanySkillSearchesBySkillName(std::string name);
+    std::vector<User> getApprovedApplicantSkillSearchesBySkillName(std::string name);
+    std::vector<User> getApprovedCompanySkillSearchesBySkillName(std::string name);
 
-    std::vector<SkillSearch*> getUnapprovedApplicantSkillSearches();
-    std::vector<SkillSearch*> getUnapprovedCompanySkillSearches();
+    std::vector<SkillSearch> getUnapprovedApplicantSkillSearches();
+    std::vector<SkillSearch> getUnapprovedCompanySkillSearches();
 
-    SkillSearch* getUserSkillSearch(User &user);
+    SkillSearch getUserSkillSearch(User &user);
 };
 
 // End of header guard
