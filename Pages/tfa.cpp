@@ -13,7 +13,7 @@
 using namespace std;
 using namespace cgicc;
 
-void onPOST(CgiccInit &cgi) {
+void onGET(CgiccInit &cgi) {
     // Required response data
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head(title("Two-Factor Authentication")) << endl;
