@@ -1,6 +1,6 @@
 // Header guard
-#ifndef AUTHENTICATION_INIT_H_
-#define AUTHENTICATION_INIT_H_
+#ifndef AUTHENTICATION_H_
+#define AUTHENTICATION_H_
 
 // Required headers
 #include <string>
