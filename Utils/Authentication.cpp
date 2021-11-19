@@ -1,8 +1,8 @@
 // Include header file
-#include "Authentication.h"
+#include "Utils/Authentication.h"
 
 // Initialised MySQL header
-#include "MySqlInit.h"
+#include "Utils/MySqlInit.h"
 
 // MySQL headers
 #include <cppconn/exception.h>

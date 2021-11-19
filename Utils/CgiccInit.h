@@ -7,7 +7,7 @@
 #include "cgicc/CgiEnvironment.h"
 
 // Required headers
-#include "Result.h"
+#include "Utils/Result.h"
 
 // CgiccInit class structure
 class CgiccInit: public Result {
