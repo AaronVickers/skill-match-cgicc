@@ -12,7 +12,7 @@ INC_DIRS = -I.
 LOGIN_CPP = Pages/login.cpp
 REGISTER_CPP = Pages/register.cpp
 TFA_CPP = Pages/tfa.cpp
-DATABASE_CPP = Tools/database.cpp
+POPULATE_DATABASE_CPP = Tools/populate-database.cpp
 CGICCINIT_CPP = Utils/CgiccInit.cpp
 CGICCINIT_HPP = Utils/CgiccInit.hpp
 MYSQLINIT_CPP = Utils/MySqlInit.cpp
@@ -36,8 +36,8 @@ tfa.cgi: $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o -o $@ $(LDFLAGS)
 
 # Database population file
-database.out: $(DATABASE_CPP)
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(DATABASE_CPP) -o $@ $(LIB_MYSQL)
+populate-database.out: $(POPULATE_DATABASE_CPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(POPULATE_DATABASE_CPP) -o $@ $(LIB_MYSQL)
 
 # CgiccInit object file
 CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_HPP)
