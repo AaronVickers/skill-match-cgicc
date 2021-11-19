@@ -5,7 +5,10 @@
 // Required headers
 #include <string>
 #include "Utils/Result.hpp"
-#include "Utils/User.hpp"
+#include "Utils/Users.hpp"
+
+// Forward declaration of required classes
+class User;
 
 // Login result class structure
 class LoginResult: public Result {
@@ -19,6 +22,9 @@ public:
     std::string sessionToken;
 };
 
+// Register result class structure
+class RegisterResult: public Result {};
+
 // User result class structure
 class UserResult: public Result {
 public:
@@ -28,13 +34,13 @@ public:
 // Authentication class structure
 class Authentication {
 public:
-    LoginResult Login(std::string username, std::string password);
+    LoginResult login(std::string username, std::string password);
 
-    TFAResult SubmitTFA(std::string TFAToken, std::string code);
+    TFAResult submitTFA(std::string TFAToken, std::string code);
 
-    Result Register(std::string username, std::string email, std::string password, std::string skill, std::string role);
+    RegisterResult registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role);
 
-    UserResult GetUserFromSessionToken(std::string sessionToken);
+    UserResult getUserFromSessionToken(std::string sessionToken);
 };
 
 // End of header guard

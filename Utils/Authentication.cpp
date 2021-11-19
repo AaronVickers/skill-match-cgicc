@@ -9,7 +9,7 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
-LoginResult Authentication::Login(std::string username, std::string password) {
+LoginResult Authentication::login(std::string username, std::string password) {
     // Create result
     LoginResult loginResult = LoginResult();
 
@@ -26,7 +26,7 @@ LoginResult Authentication::Login(std::string username, std::string password) {
     return loginResult;
 }
 
-TFAResult Authentication::SubmitTFA(std::string token, std::string code) {
+TFAResult Authentication::submitTFA(std::string token, std::string code) {
     // Create result
     TFAResult tfaResult = TFAResult();
 
@@ -43,9 +43,9 @@ TFAResult Authentication::SubmitTFA(std::string token, std::string code) {
     return tfaResult;
 }
 
-Result Authentication::Register(std::string username, std::string email, std::string password, std::string skill, std::string role) {
+RegisterResult Authentication::registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role) {
     // Create result
-    Result registerResult = Result();
+    RegisterResult registerResult = RegisterResult();
 
     // TODO: Validate data format
 
@@ -93,7 +93,7 @@ Result Authentication::Register(std::string username, std::string email, std::st
     return registerResult;
 }
 
-UserResult Authentication::GetUserFromSessionToken(std::string sessionToken) {
+UserResult Authentication::getUserFromSessionToken(std::string sessionToken) {
     // Create result
     UserResult userResult = UserResult();
 
