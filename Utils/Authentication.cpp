@@ -92,3 +92,18 @@ Result Authentication::Register(std::string username, std::string email, std::st
     // Return result
     return registerResult;
 }
+
+UserResult Authentication::GetUserFromSessionToken(std::string sessionToken) {
+    // Create result
+    UserResult userResult = UserResult();
+
+    // TODO: Validate data format
+
+    // TODO: Find user by session token
+
+    // Set success to true
+    userResult.success = true;
+    
+    // Return result
+    return userResult;
+}
