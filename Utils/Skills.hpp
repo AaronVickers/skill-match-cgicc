@@ -19,6 +19,7 @@ public:
     int getSkillId();
     std::string getName();
 
+    Skill(int skillId);
     Skill(std::string name);
 };
 
@@ -32,28 +33,32 @@ private:
 public:
     int getSkillSearchId();
     int getSkillId();
-    Skill getSkill();
+    Skill* getSkill();
     int getUserId();
-    User getUser();
+    User* getUser();
     bool getApprovedState();
 
     bool setApprovedState(bool newApprovedState);
 
-    SkillSearch(Skill skill, User user);
+    SkillSearch(int skillSearchId);
+    SkillSearch(Skill &skill, User &user);
 };
 
 // Skills class structure
 class Skills {
 public:
-    std::vector<User> getApprovedApplicantSkillSearchesBySkill(Skill skill);
+    Skill* getSkillBySkillId(int skillId);
+    Skill* getSkillBySkillName(std::string name);
 
-    std::vector<User> getApprovedCompanySkillSearchesBySkill(Skill skill);
+    SkillSearch getSkillSearchBySkillSearchId(int skillSearchId);
 
-    std::vector<SkillSearch> getUnapprovedApplicantSkillSearches();
+    std::vector<User*> getApprovedApplicantSkillSearchesBySkillName(std::string name);
+    std::vector<User*> getApprovedCompanySkillSearchesBySkillName(std::string name);
 
-    std::vector<SkillSearch> getUnapprovedCompanySkillSearches();
+    std::vector<SkillSearch*> getUnapprovedApplicantSkillSearches();
+    std::vector<SkillSearch*> getUnapprovedCompanySkillSearches();
 
-    SkillSearch getUserSkillSearch(User user);
+    SkillSearch* getUserSkillSearch(User &user);
 };
 
 // End of header guard
