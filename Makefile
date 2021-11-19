@@ -14,11 +14,11 @@ REGISTER_CPP = Pages/register.cpp
 TFA_CPP = Pages/tfa.cpp
 DATABASE_CPP = Tools/database.cpp
 CGICCINIT_CPP = Utils/CgiccInit.cpp
-CGICCINIT_H = Utils/CgiccInit.h
+CGICCINIT_HPP = Utils/CgiccInit.hpp
 MYSQLINIT_CPP = Utils/MySqlInit.cpp
-MYSQLINIT_H = Utils/MySqlInit.h
+MYSQLINIT_HPP = Utils/MySqlInit.hpp
 AUTHENTICATION_CPP = Utils/Authentication.cpp
-AUTHENTICATION_H = Utils/Authentication.h
+AUTHENTICATION_HPP = Utils/Authentication.hpp
 
 # All output files
 all: login.cgi register.cgi tfa.cgi database.out
@@ -40,15 +40,15 @@ database.out: $(DATABASE_CPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(DATABASE_CPP) -o $@ $(LIB_MYSQL)
 
 # CgiccInit object file
-CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_H)
+CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGICCINIT_CPP) -c -o $@
 
 # MySqlInit object file
-MySqlInit.o: $(MYSQLINIT_CPP) $(MYSQLINIT_H)
+MySqlInit.o: $(MYSQLINIT_CPP) $(MYSQLINIT_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(MYSQLINIT_CPP) -c -o $@
 
 # Authentication object file
-Authentication.o: $(AUTHENTICATION_CPP) $(AUTHENTICATION_H)
+Authentication.o: $(AUTHENTICATION_CPP) $(AUTHENTICATION_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(AUTHENTICATION_CPP) -c -o $@
 
 # Remove output files

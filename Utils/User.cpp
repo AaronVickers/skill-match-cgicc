@@ -1,5 +1,5 @@
 // Include header file
-#include "Utils/User.h"
+#include "Utils/User.hpp"
 
 std::string User::getUsername() {
     // Return username
