@@ -13,11 +13,7 @@
 using namespace std;
 using namespace cgicc;
 
-// Entry function
-int main(int argc, char *argv[]) {
-    // Initialise CGICC environment
-    CgiccInit cgi = CgiccInit();
-
+void onPOST(CgiccInit &cgi) {
     // Required response data
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head(title("Two-Factor Authentication")) << endl;
@@ -53,6 +49,33 @@ int main(int argc, char *argv[]) {
 
     // End of response
     cout << body() << html();
+}
+
+void onPOST(CgiccInit &cgi) {
+    // Required response data
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head(title("Two-Factor Authentication")) << endl;
+    cout << body();
+
+    cout << p("Two-Factor Authentication POST Request");
+
+    // End of response
+    cout << body() << html();
+}
+
+// Entry function
+int main(int argc, char *argv[]) {
+    // Initialise CGICC environment
+    CgiccInit cgi = CgiccInit();
+
+    // Handle different request types
+    if (cgi.env.getRequestMethod() == "GET") {
+        // Handle GET request
+        onGET(cgi);
+    } else if (cgi.env.getRequestMethod() == "POST") {
+        // Handle POST request
+        onPOST(cgi);
+    }
 
     return 0;
 }
