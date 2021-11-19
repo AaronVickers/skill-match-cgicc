@@ -20,6 +20,7 @@ public:
     int getRoleId();
     std::string getName();
 
+    Role(int roleId);
     Role(std::string name);
 };
 

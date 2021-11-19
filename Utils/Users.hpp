@@ -23,7 +23,22 @@ public:
     std::string getUsername();
     std::string getEmail();
     int getRoleId();
-    Role getRole();
+    Role* getRole();
+
+    User(int userId);
+    User(
+        std::string username,
+        std::string email,
+        std::string passwordHash,
+        std::string passwordSalt,
+        Role &role
+    );
+};
+
+// Users class structure
+class Users {
+public:
+    User* getUserByUserId(int userId);
 };
 
 // End of header guard
