@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     // Get confirmation of operation
     string confirm;
-    cout << "Are you sure you want to drop and repopulate the " DB_NAME " database? [y/N] ";
+    cout << "Are you sure you want to drop and rebuild the " DB_NAME " database? [y/N] ";
     cin >> confirm;
 
     // Validate confirmation

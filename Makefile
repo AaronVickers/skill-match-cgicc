@@ -12,7 +12,7 @@ INC_DIRS = -I.
 LOGIN_CPP = Pages/login.cpp
 REGISTER_CPP = Pages/register.cpp
 TFA_CPP = Pages/tfa.cpp
-POPULATE_DATABASE_CPP = Tools/populate-database.cpp
+BUILD_DATABASE_CPP = Tools/build-database.cpp
 CGICCINIT_CPP = Utils/CgiccInit.cpp
 CGICCINIT_HPP = Utils/CgiccInit.hpp
 MYSQLINIT_CPP = Utils/MySqlInit.cpp
@@ -21,7 +21,7 @@ AUTHENTICATION_CPP = Utils/Authentication.cpp
 AUTHENTICATION_HPP = Utils/Authentication.hpp
 
 # All output files
-all: login.cgi register.cgi tfa.cgi populate-database.out
+all: login.cgi register.cgi tfa.cgi build-database.out
 
 # Login CGI file
 login.cgi: $(LOGIN_CPP) CgiccInit.o MySqlInit.o Authentication.o
@@ -35,9 +35,9 @@ register.cgi: $(REGISTER_CPP) CgiccInit.o MySqlInit.o Authentication.o
 tfa.cgi: $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o -o $@ $(LDFLAGS)
 
-# Database population file
-populate-database.out: $(POPULATE_DATABASE_CPP)
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(POPULATE_DATABASE_CPP) -o $@ $(LIB_MYSQL)
+# Database build file
+build-database.out: $(BUILD_DATABASE_CPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(BUILD_DATABASE_CPP) -o $@ $(LIB_MYSQL)
 
 # CgiccInit object file
 CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_HPP)
