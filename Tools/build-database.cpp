@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
         // Create 'Roles' table
         stmt->execute(" \
             CREATE TABLE Roles ( \
-                RoleId INT NOT NULL UNIQUE AUTO_INCREMENT, \
+                RoleId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 Name VARCHAR(128) NOT NULL UNIQUE, \
                 PRIMARY KEY (RoleId) \
             ); \
@@ -85,12 +85,12 @@ int main(int argc, char *argv[]) {
         // Create 'Users' table
         stmt->execute(" \
             CREATE TABLE Users ( \
-                UserId INT NOT NULL UNIQUE AUTO_INCREMENT, \
+                UserId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 Username VARCHAR(20) NOT NULL UNIQUE, \
                 Email VARCHAR(320) NOT NULL, \
                 PasswordHash VARCHAR(128) NOT NULL, \
                 PasswordSalt VARCHAR(128) NOT NULL, \
-                RoleId INT NOT NULL, \
+                RoleId INT UNSIGNED NOT NULL, \
                 PRIMARY KEY (UserId), \
                 FOREIGN KEY (RoleId) REFERENCES Roles(RoleId) \
             ); \
@@ -99,8 +99,8 @@ int main(int argc, char *argv[]) {
         // Create 'TFAuthentication' table
         stmt->execute(" \
             CREATE TABLE TFAuthentication ( \
-                TFAuthenticationId INT NOT NULL UNIQUE AUTO_INCREMENT, \
-                UserId INT NOT NULL, \
+                TFAuthenticationId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
+                UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL, \
                 Code VARCHAR(6) NOT NULL, \
                 StartTime DATETIME NOT NULL, \
@@ -112,8 +112,8 @@ int main(int argc, char *argv[]) {
         // Create 'Sessions' table
         stmt->execute(" \
             CREATE TABLE Sessions ( \
-                SessionId INT NOT NULL UNIQUE AUTO_INCREMENT, \
-                UserId INT NOT NULL, \
+                SessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
+                UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL, \
                 StartTime DATETIME NOT NULL, \
                 PRIMARY KEY (SessionId), \
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
         // Create 'Skills' table
         stmt->execute(" \
             CREATE TABLE Skills ( \
-                SkillId INT NOT NULL UNIQUE AUTO_INCREMENT, \
+                SkillId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 Name VARCHAR(128) NOT NULL UNIQUE, \
                 PRIMARY KEY (SkillId) \
             ); \
@@ -133,9 +133,9 @@ int main(int argc, char *argv[]) {
         // Create 'SkillSearches' table
         stmt->execute(" \
             CREATE TABLE SkillSearches ( \
-                SkillSearchId INT NOT NULL UNIQUE AUTO_INCREMENT, \
-                SkillId INT NOT NULL, \
-                UserId INT NOT NULL, \
+                SkillSearchId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
+                SkillId INT UNSIGNED NOT NULL, \
+                UserId INT UNSIGNED NOT NULL, \
                 ApprovedState BOOLEAN NOT NULL, \
                 PRIMARY KEY (SkillSearchId), \
                 FOREIGN KEY (SkillId) REFERENCES Skills(SkillId), \
