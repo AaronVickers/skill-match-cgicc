@@ -14,12 +14,11 @@ MySqlInit::MySqlInit() {
         // Set schema to use
         conn->setSchema(DB_NAME);
 
-        // Set success to true
-        success = true;
+        // Set success
+        setSuccess(true);
     } catch (sql::SQLException &sql_error) {
-        // Set success to false and store error
-        success = false;
-        errorMsg = sql_error.what();
+        // Set error
+        setError(sql_error.what());
     }
 }
 

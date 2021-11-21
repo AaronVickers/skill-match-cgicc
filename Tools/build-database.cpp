@@ -15,13 +15,15 @@ using namespace std;
 // MySqlInit constructor
 MySqlInit::MySqlInit() {
     try {
+        // Connect to database
         driver = get_driver_instance();
         conn = driver->connect(DB_HOST, DB_USER, DB_PASS);
 
-        success = true;
+        // Set success
+        setSuccess(true);
     } catch (sql::SQLException &sql_error) {
-        success = false;
-        errorMsg = sql_error.what();
+        // Set error
+        setError(sql_error.what());
     }
 }
 
@@ -54,8 +56,8 @@ int main(int argc, char *argv[]) {
     MySqlInit db = MySqlInit();
 
     // Handle connection error
-    if (db.success == false) {
-        cout << "Failed to connect to database.\nError: " << db.errorMsg << endl;
+    if (!db.getSuccess()) {
+        cout << "Failed to connect to database.\nError: " << db.getErrorMsg() << endl;
 
         return 0;
     }
@@ -88,8 +90,7 @@ int main(int argc, char *argv[]) {
                 UserId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 Username VARCHAR(20) NOT NULL UNIQUE, \
                 Email VARCHAR(320) NOT NULL, \
-                PasswordHash VARCHAR(128) NOT NULL, \
-                PasswordSalt VARCHAR(128) NOT NULL, \
+                PasswordHashEncoded VARCHAR(128) NOT NULL, \
                 RoleId INT UNSIGNED NOT NULL, \
                 PRIMARY KEY (UserId), \
                 FOREIGN KEY (RoleId) REFERENCES Roles(RoleId) \

@@ -25,15 +25,8 @@ public:
 // Register result class structure
 class RegisterResult: public Result {};
 
-// User result class structure
-class UserResult: public Result {
-public:
-    User user;
-};
-
-// Authentication class structure
-class Authentication {
-public:
+// Authentication namespace
+namespace Authentication {
     LoginResult login(std::string username, std::string password);
 
     TFAResult submitTFA(std::string TFAToken, std::string code);
@@ -41,7 +34,7 @@ public:
     RegisterResult registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role);
 
     UserResult getUserFromSessionToken(std::string sessionToken);
-};
+}
 
 // End of header guard
 #endif

@@ -4,12 +4,7 @@
 
 // Required headers
 #include <string>
-
-// Roles class structure
-class Roles {
-public:
-    bool doesAdminExist();
-};
+#include "Utils/Result.hpp"
 
 // Role class structure
 class Role {
@@ -20,9 +15,20 @@ public:
     int getRoleId();
     std::string getName();
 
-    Role(int roleId);
-    Role(std::string name);
+    Role(int _roleId);
+    Role(int _roleId, std::string _name);
 };
+
+// Role result class structure
+class RoleResult: public Result {
+public:
+    Role *role;
+};
+
+// Roles namespace
+namespace Roles {
+    RoleResult getRoleByName(std::string name);
+}
 
 // End of header guard
 #endif

@@ -11,10 +11,10 @@
 
 // CgiccInit class structure
 class CgiccInit: public Result {
-private:
+public:
     // Cgicc instance
     cgicc::Cgicc cgi;
-public:
+
     // Cgicc environment
     const cgicc::CgiEnvironment &env = cgi.getEnvironment();
 

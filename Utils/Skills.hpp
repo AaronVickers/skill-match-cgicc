@@ -5,6 +5,7 @@
 // Required headers
 #include <string>
 #include <vector>
+#include "Utils/Result.hpp"
 #include "Utils/Users.hpp"
 
 // Forward declaration of required classes
@@ -19,8 +20,14 @@ public:
     int getSkillId();
     std::string getName();
 
-    Skill(int skillId);
-    Skill(std::string name);
+    Skill(int _skillId);
+    Skill(std::string _name);
+};
+
+// Skill result class structure
+class SkillResult: public Result {
+public:
+    Skill skill;
 };
 
 // SkillSearch class structure
@@ -40,26 +47,22 @@ public:
 
     bool setApprovedState(bool newApprovedState);
 
-    SkillSearch(int skillSearchId);
+    SkillSearch(int _skillSearchId);
     SkillSearch(Skill &skill, User &user);
 };
 
-// Skills class structure
-class Skills {
-public:
-    Skill getSkillBySkillId(int skillId);
-    Skill getSkillBySkillName(std::string name);
+// Skills namespace
+namespace Skills {
+    SkillSearch getSkillByName(std::string name);
 
-    SkillSearch getSkillSearchBySkillSearchId(int skillSearchId);
-
-    std::vector<User> getApprovedApplicantSkillSearchesBySkillName(std::string name);
-    std::vector<User> getApprovedCompanySkillSearchesBySkillName(std::string name);
+    std::vector<User> getApprovedApplicantSkillSearchesByName(std::string name);
+    std::vector<User> getApprovedCompanySkillSearchesByName(std::string name);
 
     std::vector<SkillSearch> getUnapprovedApplicantSkillSearches();
     std::vector<SkillSearch> getUnapprovedCompanySkillSearches();
 
     SkillSearch getUserSkillSearch(User &user);
-};
+}
 
 // End of header guard
 #endif
