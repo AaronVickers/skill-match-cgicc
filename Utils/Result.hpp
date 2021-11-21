@@ -7,12 +7,21 @@
 
 // Result class structure
 class Result {
-public:
+private:
     // Success status
     bool success;
-    
+
     // Error message
     std::string errorMsg;
+public:
+    bool getSuccess();
+    std::string getErrorMsg();
+
+    void setSuccess(bool newSuccess);
+    void setError(std::string newErrorMsg);
+
+    Result();
+    Result(std::string _errorMsg);
 };
 
 // End of header guard

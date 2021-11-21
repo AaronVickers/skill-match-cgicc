@@ -9,6 +9,9 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
+// Argon2 header
+#include "argon2.h"
+
 LoginResult Authentication::login(std::string username, std::string password) {
     // Create result
     LoginResult loginResult = LoginResult();
@@ -19,8 +22,8 @@ LoginResult Authentication::login(std::string username, std::string password) {
 
     // TODO: Generate 2FA session
 
-    // Set success to true
-    loginResult.success = true;
+    // Set result success
+    loginResult.setSuccess(true);
     
     // Return result
     return loginResult;
@@ -36,8 +39,8 @@ TFAResult Authentication::submitTFA(std::string token, std::string code) {
 
     // TODO: Generate authenticated session
 
-    // Set success to true
-    tfaResult.success = true;
+    // Set result success
+    tfaResult.setSuccess(true);
     
     // Return result
     return tfaResult;
@@ -47,18 +50,41 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     // Create result
     RegisterResult registerResult = RegisterResult();
 
+    if (username.empty()) {
+        registerResult.setError("missing_username");
+
+        return registerResult;
+    } else if (email.empty()) {
+        registerResult.setError("missing_email");
+
+        return registerResult;
+    } else if (password.empty()) {
+        registerResult.setError("missing_password");
+
+        return registerResult;
+    } else if (skill.empty()) {
+        registerResult.setError("missing_skill");
+
+        return registerResult;
+    } else if (role.empty()) {
+        registerResult.setError("missing_role");
+
+        return registerResult;
+    }
+
     // TODO: Validate data format
 
     // TODO: Generate registered details
+    std::string passwordHashEncoded = "temp";
+    int roleId = 2;
 
     // Initialise MySQL connection
     MySqlInit db = MySqlInit();
 
     // Handle connection error
-    if (db.success == false) {
+    if (!db.getSuccess()) {
         // Set success to false and store error
-        registerResult.success = false;
-        registerResult.errorMsg = db.errorMsg;
+        registerResult.setError(db.getErrorMsg());
 
         // Return result
         return registerResult;
@@ -71,23 +97,23 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
         sql::PreparedStatement *pstmt;
 
         // Prepare user insertion statement
-        pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHash, PasswordSalt, Role) VALUES (?,?,?,?,?)");
+        pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId) VALUES (?,?,?,?)");
 
-        // pstmt->setString(1, username);
-        // pstmt->setString(2, email);
-        // pstmt->setString(3, passwordHash);
-        // pstmt->setString(4, passwordSalt);
-        // pstmt->setString(5, role);
+        // Insert values into statement
+        pstmt->setString(1, username);
+        pstmt->setString(2, email);
+        pstmt->setString(3, passwordHashEncoded);
+        pstmt->setInt(4, roleId);
 
-        // pstmt->execute();
-
-        // Set success to true
-        registerResult.success = true;
+        // Execute statement
+        pstmt->execute();
     } catch (sql::SQLException &sql_error) {
         // Set success to false and store error
-        registerResult.success = false;
-        registerResult.errorMsg = sql_error.what();
+        registerResult.setError(sql_error.what());
     }
+    
+    // Set result success
+    registerResult.setSuccess(true);
 
     // Return result
     return registerResult;
@@ -101,9 +127,9 @@ UserResult Authentication::getUserFromSessionToken(std::string sessionToken) {
     // TODO: Validate data format
 
     // TODO: Find user by session token
-
-    // Set success to true
-    userResult.success = true;
+    
+    // Set result success
+    userResult.setSuccess(true);
     
     // Return result
     return userResult;

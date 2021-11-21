@@ -4,6 +4,7 @@
 
 // CGICC headers
 #include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTTPRedirectHeader.h"
 #include "cgicc/HTMLClasses.h"
 
 // Required headers
@@ -105,15 +106,30 @@ void onGET(CgiccInit &cgi) {
 }
 
 void onPOST(CgiccInit &cgi) {
-    // Required response data
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Register")) << endl;
-    cout << body();
+    // Get form data
+    string username = cgi.cgi.getElement("username")->getValue();
+    string email = cgi.cgi.getElement("email")->getValue();
+    string password = cgi.cgi.getElement("password")->getValue();
+    string skill = cgi.cgi.getElement("skill")->getValue();
+    string role = cgi.cgi.getElement("role")->getValue();
 
-    cout << p("Register POST Request");
+    RegisterResult registerResult = Authentication::registerAccount(username, email, password, skill, role);
 
-    // End of response
-    cout << body() << html();
+    // Redirect location string
+    string redirectLocation;
+
+    // Handle error
+    if (!registerResult.getSuccess()) {
+        // Redirect to register page with error message
+        redirectLocation = "./register.cgi?error=" + registerResult.getErrorMsg();
+        cout << HTTPRedirectHeader(redirectLocation, false) << endl;
+
+        return;
+    }
+
+    // Redirect to login page with message
+    redirectLocation = "./login.cgi?message=registered";
+    cout << HTTPRedirectHeader(redirectLocation, false) << endl;
 }
 
 // Entry function
