@@ -2,7 +2,7 @@
 #ifndef MYSQL_INIT_H_
 #define MYSQL_INIT_H_
 
-// Define environment variables
+// Define environment constants
 #define DB_HOST "tcp://127.0.0.1:3306"
 #define DB_USER "DB_USERNAME"
 #define DB_PASS "DB_PASSWORD"
