@@ -2,6 +2,13 @@
 #ifndef AUTHENTICATION_H_
 #define AUTHENTICATION_H_
 
+// Define environment constants
+#define T_COST 2
+#define M_COST 15360
+#define PARALLELISM 1
+#define HASH_LEN 32
+#define ENCODED_LEN 128
+
 // Required headers
 #include <string>
 #include "Utils/Result.hpp"
