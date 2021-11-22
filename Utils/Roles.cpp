@@ -60,10 +60,12 @@ RoleResult Roles::getRoleByName(std::string name) {
         pstmt->setString(1, name);
         res = pstmt->executeQuery();
 
+        // Delete statement from memory
+        delete pstmt;
+
         // Error if no rows selected
         if (!res->next()) {
-            // Delete statement and result from memory
-            delete pstmt;
+            // Delete result from memory
             delete res;
 
             roleResult.setError("Role with provided name doesn't exist.");
@@ -77,8 +79,7 @@ RoleResult Roles::getRoleByName(std::string name) {
         // Store role in result
         roleResult.role = new Role(roleId, name);
 
-        // Delete statement and result from memory
-        delete pstmt;
+        // Delete result from memory
         delete res;
     } catch (sql::SQLException &sql_error) {
         // Handle SQL exception
