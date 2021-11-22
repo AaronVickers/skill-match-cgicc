@@ -6,7 +6,7 @@ LIB_ARGON2 = -largon2
 # Compiler options
 CXX = g++
 CXXFLAGS = -std=c++14
-LDFLAGS = $(LIB_CGICC) $(LIB_MYSQL)
+LDFLAGS = $(LIB_CGICC) $(LIB_MYSQL) $(LIB_ARGON2)
 INC_DIRS = -I.
 
 # File locations
