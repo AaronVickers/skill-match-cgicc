@@ -110,6 +110,9 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     } catch (sql::SQLException &sql_error) {
         // Set success to false and store error
         registerResult.setError(sql_error.what());
+
+        // Return result
+        return registerResult;
     }
     
     // Set result success
