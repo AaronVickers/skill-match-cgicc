@@ -34,7 +34,7 @@ public:
 // User result class structure
 class UserResult: public Result {
 public:
-    User user;
+    User *user;
 };
 
 // Users namespace

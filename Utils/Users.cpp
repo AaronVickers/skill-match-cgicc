@@ -88,7 +88,7 @@ UserResult Users::getUserByUsername(std::string username) {
         pstmt = db.conn->prepareStatement("SELECT * FROM Users WHERE Username=?");
 
         // Execute query
-        pstmt->setValue(1, username);
+        pstmt->setString(1, username);
         res = pstmt->executeQuery();
 
         // Check if result has any rows
@@ -109,13 +109,13 @@ UserResult Users::getUserByUsername(std::string username) {
 
         // Get user details from first row
         int userId = res->getInt("UserId");
-        std::string username = res->getValue("Username");
-        std::string email = res->getValue("Email");
-        std::string passwordHashEncoded = res->getValue("PasswordHashEncoded");
-        std::string roleId = res->getInt("RoleId");
+        std::string username = res->getString("Username");
+        std::string email = res->getString("Email");
+        std::string passwordHashEncoded = res->getString("PasswordHashEncoded");
+        int roleId = res->getInt("RoleId");
 
         // Store role in result
-        userResult.role = new User(userId, username, email, passwordHashEncoded, roleId);
+        userResult.user = new User(userId, username, email, passwordHashEncoded, roleId);
 
         // Delete result from memory
         delete res;
