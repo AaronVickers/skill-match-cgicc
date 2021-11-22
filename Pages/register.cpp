@@ -64,27 +64,27 @@ void onGET(CgiccInit &cgi) {
         )
     );
 
+    auto roleSelect = cgicc::select();
+    roleSelect.set("name", "role");
+
+    if (!Users::doesAdminExist()) {
+        roleSelect.add(option("Administrator")
+            .set("value", "Administrator")
+        );
+    }
+
+    roleSelect.add(option("Applicant")
+        .set("value", "Applicant")
+    );
+
+    roleSelect.add(option("Company")
+        .set("value", "Company")
+    );
+
     // Role dropdown
     registerForm.add(cgicc::div()
         .add(span("Role: "))
-        .add(cgicc::select()
-            .set("name", "role")
-            // .add(option("Select a role...")
-            //     .set("hidden", "")
-            //     .set("disabled", "")
-            //     .set("selected", "")
-            //     .set("value", "")
-            // )
-            .add(option("Applicant")
-                .set("value", "Applicant")
-            )
-            .add(option("Company")
-                .set("value", "Company")
-            )
-            .add(option("Administrator")
-                .set("value", "Administrator")
-            )
-        )
+        .add(roleSelect)
     );
 
     // Register button
