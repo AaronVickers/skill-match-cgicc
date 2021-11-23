@@ -41,9 +41,12 @@ LoginResult Authentication::login(std::string username, std::string password) {
         return loginResult;
     }
 
+    // Get password hash encoded
+    std::string passwordHashEncoded = userResult.user->getPasswordHashEncoded();
+
     // Variables for password hashing
     const char *passwordCString = password.c_str();
-    const char *encodedCString = userResult.user->getPasswordHashEncoded().c_str();
+    const char *encodedCString = passwordHashEncoded.c_str();
 
     // Verify password
     int verifySuccess = argon2_verify(
@@ -54,7 +57,7 @@ LoginResult Authentication::login(std::string username, std::string password) {
 
     // Handle incorrect password
     if (verifySuccess != ARGON2_OK) {
-        loginResult.setError("incorrect_password");
+        loginResult.setError(std::string(encodedCString));
 
         return loginResult;
     }
