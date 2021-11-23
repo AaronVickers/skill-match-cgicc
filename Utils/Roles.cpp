@@ -23,7 +23,34 @@ std::string Role::getName() {
 }
 
 Role::Role(int _roleId) {
-    
+    roleId = _roleId;
+
+    // Initialise MySQL connection
+    MySqlInit db = MySqlInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare role select statement
+    pstmt = db.conn->prepareStatement("SELECT * FROM Roles WHERE RoleId=?");
+
+    // Execute query
+    pstmt->setInt(1, roleId);
+    res = pstmt->executeQuery();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    // Get first row
+    res->next();
+
+    // Get role name from row
+    name = res->getString("Name");
+
+    // Delete result from memory
+    delete res;
 }
 
 Role::Role(int _roleId, std::string _name) {

@@ -45,7 +45,7 @@ public:
     User getUser();
     bool getApprovedState();
 
-    bool setApprovedState(bool newApprovedState);
+    void setApprovedState(bool newApprovedState);
 
     SkillSearch(int _skillSearchId);
     SkillSearch(Skill &skill, User &user);

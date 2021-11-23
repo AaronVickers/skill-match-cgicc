@@ -28,7 +28,7 @@ public:
 
     User(int _userId);
     User(std::string _username, std::string _email, std::string password, Role &role);
-    User(int _userId, std::string _username, std::string _email, std::string password, int _roleId);
+    User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId);
 };
 
 // User result class structure
