@@ -113,6 +113,7 @@ void onPOST(CgiccInit &cgi) {
     string skill = cgi.cgi.getElement("skill")->getValue();
     string role = cgi.cgi.getElement("role")->getValue();
 
+    // Attempt to register
     RegisterResult registerResult = Authentication::registerAccount(username, email, password, skill, role);
 
     // Redirect location string
