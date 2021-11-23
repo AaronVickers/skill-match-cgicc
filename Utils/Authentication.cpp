@@ -57,7 +57,7 @@ LoginResult Authentication::login(std::string username, std::string password) {
 
     // Handle incorrect password
     if (verifySuccess != ARGON2_OK) {
-        loginResult.setError(std::string(encodedCString));
+        loginResult.setError("incorrect_password");
 
         return loginResult;
     }
