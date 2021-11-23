@@ -47,11 +47,79 @@ Role User::getRole() {
 }
 
 User::User(int _userId) {
+    userId = _userId;
 
+    // Initialise MySQL connection
+    MySqlInit db = MySqlInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare user select statement
+    pstmt = db.conn->prepareStatement("SELECT * FROM Users WHERE UserId=?");
+
+    // Execute query
+    pstmt->setInt(1, userId);
+    res = pstmt->executeQuery();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    // Get first row
+    res->next();
+
+    // Get user details from row
+    username = res->getString("Username");
+    email = res->getString("Email");
+    passwordHashEncoded = res->getString("PasswordHashEncoded");
+    roleId = res->getInt("RoleId");
+
+    // Delete result from memory
+    delete res;
 }
 
-User::User(std::string _username, std::string _email, std::string password, Role &role) {
+User::User(std::string _username, std::string _email, std::string _passwordHashEncoded, Role &role) {
+    username = _username;
+    email = _email;
+    passwordHashEncoded = _passwordHashEncoded;
+    roleId = role.getRoleId();
 
+    // Initialise MySQL connection
+    MySqlInit db = MySqlInit();
+
+    // SQL statement variable
+    sql::Statement *stmt = db.conn->createStatement();
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare user insert and ID select statement
+    pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId) VALUES (?,?,?,?)");
+
+    // Insert values into statement
+    pstmt->setString(1, username);
+    pstmt->setString(2, email);
+    pstmt->setString(3, passwordHashEncoded);
+    pstmt->setInt(4, roleId);
+
+    // Execute query
+    pstmt->execute();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
+
+    // Get first row
+    res->next();
+
+    // Get user ID from row
+    userId = res->getInt(1);
+
+    // Delete result from memory
+    delete res;
 }
 
 User::User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId) {
@@ -90,9 +158,6 @@ UserResult Users::getUserByUsername(std::string username) {
         // Execute query
         pstmt->setString(1, username);
         res = pstmt->executeQuery();
-
-        // Check if result has any rows
-        bool foundRow = res->next();
 
         // Delete statement from memory
         delete pstmt;

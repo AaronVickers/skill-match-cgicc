@@ -4,6 +4,7 @@
 
 // CGICC headers
 #include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTTPRedirectHeader.h"
 #include "cgicc/HTMLClasses.h"
 
 // Required headers
@@ -62,15 +63,28 @@ void onGET(CgiccInit &cgi) {
 }
 
 void onPOST(CgiccInit &cgi) {
-    // Required response data
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Login")) << endl;
-    cout << body();
+    // Get form data
+    string username = cgi.cgi.getElement("username")->getValue();
+    string password = cgi.cgi.getElement("password")->getValue();
 
-    cout << p("Login POST Request");
+    // Attempt login
+    LoginResult loginResult = Authentication::login(username, password);
 
-    // End of response
-    cout << body() << html();
+    // Redirect location string
+    string redirectLocation;
+
+    // Handle error
+    if (!loginResult.getSuccess()) {
+        // Redirect to login page with error message
+        redirectLocation = "./login.cgi?error=" + loginResult.getErrorMsg();
+        cout << HTTPRedirectHeader(redirectLocation, false) << endl;
+
+        return;
+    }
+
+    // Redirect to 2FA page
+    redirectLocation = "./tfa.cgi";
+    cout << HTTPRedirectHeader(redirectLocation, false) << endl;
 }
 
 // Entry function

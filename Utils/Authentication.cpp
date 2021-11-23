@@ -22,9 +22,42 @@ LoginResult Authentication::login(std::string username, std::string password) {
     // Create result
     LoginResult loginResult = LoginResult();
 
-    // TODO: Validate data format
+    // Verify that all fields have a value
+    if (username.empty()) {
+        loginResult.setError("missing_username");
 
-    // TODO: Validate credentials
+        return loginResult;
+    } else if (password.empty()) {
+        loginResult.setError("missing_password");
+
+        return loginResult;
+    }
+
+    // Make sure user exists
+    UserResult userResult = Users::getUserByUsername(username);
+    if (!userResult.getSuccess()) {
+        loginResult.setError("invalid_username");
+
+        return loginResult;
+    }
+
+    // Variables for password hashing
+    const char *passwordCString = password.c_str();
+    const char *encodedCString = userResult.user->getPasswordHashEncoded().c_str();
+
+    // Verify password
+    int verifySuccess = argon2_verify(
+        encodedCString,
+        passwordCString, password.length(),
+        Argon2_id
+    );
+
+    // Handle incorrect password
+    if (verifySuccess != ARGON2_OK) {
+        loginResult.setError("incorrect_password");
+
+        return loginResult;
+    }
 
     // TODO: Generate 2FA session
 
@@ -144,7 +177,15 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
         return registerResult;
     }
 
-    // TODO: Generate random salt
+    // Check if username is in use
+    UserResult existingUserResult = Users::getUserByUsername(username);
+    if (existingUserResult.getSuccess()) {
+        registerResult.setError("username_in_use");
+
+        return registerResult;
+    }
+
+    // TODO: Generate unique salt
     std::string salt = "TemporarySalt";
 
     // Variables for password hashing
@@ -154,7 +195,7 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     char encodedCString[ENCODED_LEN];
 
     // Hash password
-    argon2_hash(
+    int hashSuccess = argon2_hash(
         T_COST, M_COST, PARALLELISM,
         passwordCString, password.length(),
         saltCString, salt.length(),
@@ -163,38 +204,19 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
         Argon2_id, ARGON2_VERSION_13
     );
 
-    // Convert password hash to C++ string
-    std::string passwordHashEncoded = encodedCString;
+    // Handle failed hashing
+    if (hashSuccess != ARGON2_OK) {
+        registerResult.setError("invalid_password");
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
-
-    // Handle connection error
-    if (!db.getSuccess()) {
-        // Set success to false and store error
-        registerResult.setError(db.getErrorMsg());
-
-        // Return result
         return registerResult;
     }
 
+    // Convert password hash to C++ string
+    std::string passwordHashEncoded = encodedCString;
+
     // Attempt to complete operation
     try {
-        // SQL statement variables
-        sql::Statement *stmt = db.conn->createStatement();
-        sql::PreparedStatement *pstmt;
-
-        // Prepare user insertion statement
-        pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId) VALUES (?,?,?,?)");
-
-        // Insert values into statement
-        pstmt->setString(1, username);
-        pstmt->setString(2, email);
-        pstmt->setString(3, passwordHashEncoded);
-        pstmt->setInt(4, roleResult.role->getRoleId());
-
-        // Execute statement
-        pstmt->execute();
+        User newUser = User(username, email, passwordHashEncoded, *roleResult.role);
     } catch (sql::SQLException &sql_error) {
         // Set success to false and store error
         registerResult.setError(sql_error.what());
