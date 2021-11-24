@@ -1,7 +1,7 @@
 // Include header file
 #include "Utils/MariaDBInit.hpp"
 
-// MariaDB headers
+// MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Constructor

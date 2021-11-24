@@ -4,7 +4,7 @@
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
-// MariaDB headers
+// MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Required headers

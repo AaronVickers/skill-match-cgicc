@@ -8,7 +8,7 @@
 #define DB_PASS "root"
 #define DB_NAME "coursework"
 
-// MariaDB headers
+// MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Required headers
