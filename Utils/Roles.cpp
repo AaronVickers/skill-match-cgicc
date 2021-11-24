@@ -1,13 +1,11 @@
 // Include header file
 #include "Utils/Roles.hpp"
 
-// Initialised MySQL header
-#include "Utils/MySqlInit.hpp"
+// Initialised MariaDB header
+#include "Utils/MariaDBInit.hpp"
 
-// MySQL headers
-#include <cppconn/exception.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+// MariaDB headers
+#include <mariadb/conncpp.hpp>
 
 // Required headers
 #include <string>
@@ -25,8 +23,8 @@ std::string Role::getName() {
 Role::Role(int _roleId) {
     roleId = _roleId;
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // SQL statement variable
     sql::PreparedStatement *pstmt;
@@ -47,7 +45,7 @@ Role::Role(int _roleId) {
     res->next();
 
     // Get role name from row
-    name = res->getString("Name");
+    name = res->getString("Name").c_str();
 
     // Delete result from memory
     delete res;
@@ -62,8 +60,8 @@ RoleResult Roles::getRoleByName(std::string name) {
     // Create result
     RoleResult roleResult = RoleResult();
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // Handle connection error
     if (!db.getSuccess()) {

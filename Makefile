@@ -1,12 +1,12 @@
 # Library flags
 LIB_CGICC = -lcgicc
-LIB_MYSQL = -lmysqlcppconn
+LIB_MARIADB = -lmariadbcpp
 LIB_ARGON2 = -largon2
 
 # Compiler options
 CXX = g++
 CXXFLAGS = -std=c++14
-LDFLAGS = $(LIB_CGICC) $(LIB_MYSQL) $(LIB_ARGON2)
+LDFLAGS = $(LIB_CGICC) $(LIB_MARIADB) $(LIB_ARGON2)
 INC_DIRS = -I.
 
 # File locations
@@ -18,8 +18,8 @@ BUILD_DATABASE_CPP = Tools/build-database.cpp
 
 CGICCINIT_CPP = Utils/CgiccInit.cpp
 CGICCINIT_HPP = Utils/CgiccInit.hpp
-MYSQLINIT_CPP = Utils/MySqlInit.cpp
-MYSQLINIT_HPP = Utils/MySqlInit.hpp
+MARIADBINIT_CPP = Utils/MariaDBInit.cpp
+MARIADBINIT_HPP = Utils/MariaDBInit.hpp
 
 AUTHENTICATION_CPP = Utils/Authentication.cpp
 AUTHENTICATION_HPP = Utils/Authentication.hpp
@@ -36,28 +36,28 @@ USERS_HPP = Utils/Users.hpp
 all: login.cgi register.cgi tfa.cgi build-database.out
 
 # Login CGI file
-login.cgi: $(LOGIN_CPP) CgiccInit.o MySqlInit.o Authentication.o Result.o Roles.o Skills.o Users.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) CgiccInit.o MySqlInit.o Authentication.o Result.o Roles.o Skills.o Users.o -o $@ $(LDFLAGS)
+login.cgi: $(LOGIN_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o -o $@ $(LDFLAGS)
 
 # Register CGI file
-register.cgi: $(REGISTER_CPP) CgiccInit.o MySqlInit.o Authentication.o Result.o Roles.o Skills.o Users.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) CgiccInit.o MySqlInit.o Authentication.o Result.o Roles.o Skills.o Users.o -o $@ $(LDFLAGS)
+register.cgi: $(REGISTER_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o -o $@ $(LDFLAGS)
 
 # 2FA CGI file
-tfa.cgi: $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o Result.o Roles.o Skills.o Users.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CgiccInit.o MySqlInit.o Authentication.o Result.o Roles.o Skills.o Users.o -o $@ $(LDFLAGS)
+tfa.cgi: $(TFA_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o -o $@ $(LDFLAGS)
 
 # Database build file
 build-database.out: $(BUILD_DATABASE_CPP) Result.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(BUILD_DATABASE_CPP) Result.o -o $@ $(LIB_MYSQL)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(BUILD_DATABASE_CPP) Result.o -o $@ $(LIB_MARIADB)
 
 # CgiccInit object file
 CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGICCINIT_CPP) -c -o $@
 
-# MySqlInit object file
-MySqlInit.o: $(MYSQLINIT_CPP) $(MYSQLINIT_HPP)
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(MYSQLINIT_CPP) -c -o $@
+# MariaDBInit object file
+MariaDBInit.o: $(MARIADBINIT_CPP) $(MARIADBINIT_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(MARIADBINIT_CPP) -c -o $@
 
 # Authentication object file
 Authentication.o: $(AUTHENTICATION_CPP) $(AUTHENTICATION_HPP)
