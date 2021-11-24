@@ -4,7 +4,7 @@
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
-// MariaDB headers
+// MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Argon2 header
@@ -15,6 +15,235 @@
 #include <regex>
 #include "Utils/Users.hpp"
 #include "Utils/Roles.hpp"
+#include "Utils/sole.hpp"
+
+int TFAuthentication::getTFAuthenticationId() {
+    // Return 2FA ID
+    return TFAuthenticationId;
+}
+
+int TFAuthentication::getUserId() {
+    // Return user ID
+    return userId;
+}
+
+User TFAuthentication::getUser() {
+    // Get 2FA user
+    User user = User(userId);
+
+    // Return user
+    return user;
+}
+
+std::string TFAuthentication::getToken() {
+    // Return token
+    return token;
+}
+
+std::string TFAuthentication::getCode() {
+    // Return code
+    return code;
+}
+
+sql::Timestamp TFAuthentication::getStartTime() {
+    // Return start time
+    return startTime;
+}
+
+TFAuthentication::TFAuthentication(int _TFAuthenticationId) {
+    TFAuthenticationId = _TFAuthenticationId;
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare 2FA select statement
+    pstmt = db.conn->prepareStatement("SELECT * FROM TFAuthentication WHERE TFAuthenticationId=?");
+
+    // Execute query
+    pstmt->setInt(1, TFAuthenticationId);
+    res = pstmt->executeQuery();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    // Get first row
+    res->next();
+
+    // Get 2FA details from row
+    userId = res->getInt("UserId");
+    token = res->getString("Token").c_str();
+    code = res->getString("Code").c_str();
+    startTime = res->getString("StartTime");
+
+    // Delete result from memory
+    delete res;
+}
+
+TFAuthentication::TFAuthentication(User user, std::string _token, std::string _code, sql::Timestamp _startTime) {
+    userId = user.getUserId();
+    token = _token;
+    code = _code;
+    startTime = _startTime;
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::Statement *stmt = db.conn->createStatement();
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare 2FA insert
+    pstmt = db.conn->prepareStatement("INSERT INTO TFAuthentication (UserId, Token, Code, StartTime) VALUES (?,?,?,?)");
+
+    // Insert values into statement
+    pstmt->setInt(1, userId);
+    pstmt->setString(2, token);
+    pstmt->setString(3, code);
+    pstmt->setString(4, startTime);
+
+    // Execute query
+    pstmt->execute();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    // Get primary key of new row
+    res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
+
+    // Get first row
+    res->next();
+
+    // Get 2FA ID from row
+    TFAuthenticationId = res->getInt(1);
+
+    // Delete result from memory
+    delete res;
+}
+
+TFAuthentication::TFAuthentication(int _TFAuthenticationId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime) {
+    TFAuthenticationId = _TFAuthenticationId;
+    userId = _userId;
+    token = _token;
+    code = _code;
+    startTime = _startTime;
+}
+
+
+int Session::getSessionId() {
+    // Return session ID
+    return sessionId;
+}
+
+int Session::getUserId() {
+    // Return user ID
+    return userId;
+}
+
+User Session::getUser() {
+    // Get session user
+    User user = User(userId);
+
+    // Return user
+    return user;
+}
+
+std::string Session::getToken() {
+    // Return token
+    return token;
+}
+
+sql::Timestamp Session::getStartTime() {
+    // Return start time
+    return startTime;
+}
+
+Session::Session(int _sessionId) {
+    sessionId = _sessionId;
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare session select statement
+    pstmt = db.conn->prepareStatement("SELECT * FROM Sessions WHERE SessionId=?");
+
+    // Execute query
+    pstmt->setInt(1, sessionId);
+    res = pstmt->executeQuery();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    // Get first row
+    res->next();
+
+    // Get session details from row
+    userId = res->getInt("UserId");
+    token = res->getString("Token").c_str();
+    startTime = res->getString("StartTime");
+
+    // Delete result from memory
+    delete res;
+}
+
+Session::Session(User user, std::string _token, sql::Timestamp _startTime) {
+    userId = user.getUserId();
+    token = _token;
+    startTime = _startTime;
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::Statement *stmt = db.conn->createStatement();
+    sql::PreparedStatement *pstmt;
+    // SQL result variable
+    sql::ResultSet *res;
+
+    // Prepare session insert
+    pstmt = db.conn->prepareStatement("INSERT INTO Sessions (UserId, Token, StartTime) VALUES (?,?,?)");
+
+    // Insert values into statement
+    pstmt->setInt(1, userId);
+    pstmt->setString(2, token);
+    pstmt->setString(3, startTime);
+
+    // Execute query
+    pstmt->execute();
+
+    // Delete statement from memory
+    delete pstmt;
+
+    // Get primary key of new row
+    res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
+
+    // Get first row
+    res->next();
+
+    // Get session ID from row
+    sessionId = res->getInt(1);
+
+    // Delete result from memory
+    delete res;
+}
+
+Session::Session(int _sessionId, int _userId, std::string _token, sql::Timestamp _startTime) {
+    sessionId = _sessionId;
+    userId = _userId;
+    token = _token;
+    startTime = _startTime;
+}
 
 LoginResult Authentication::login(std::string username, std::string password) {
     // Create result
@@ -186,8 +415,9 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
         return registerResult;
     }
 
-    // TODO: Generate unique salt
-    std::string salt = "TemporarySalt";
+    // Generate unique salt
+    sole::uuid saltUUID = sole::uuid4();
+    std::string salt = saltUUID.str();
 
     // Variables for password hashing
     const char *passwordCString = password.c_str();

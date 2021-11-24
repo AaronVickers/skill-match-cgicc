@@ -8,7 +8,7 @@
 #define DB_PASS "DB_PASSWORD"
 #define DB_NAME "skill_match"
 
-// MariaDB headers
+// MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Required headers

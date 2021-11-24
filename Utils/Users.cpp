@@ -4,7 +4,7 @@
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
-// MariaDB headers
+// MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Required headers
@@ -93,7 +93,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     // SQL result variable
     sql::ResultSet *res;
 
-    // Prepare user insert and ID select statement
+    // Prepare user insert
     pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId) VALUES (?,?,?,?)");
 
     // Insert values into statement
@@ -108,6 +108,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     // Delete statement from memory
     delete pstmt;
 
+    // Get primary key of new row
     res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
 
     // Get first row
