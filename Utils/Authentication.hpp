@@ -9,6 +9,9 @@
 #define HASH_LEN 32
 #define ENCODED_LEN 128
 
+// MariaDB header
+#include <mariadb/conncpp.hpp>
+
 // Required headers
 #include <string>
 #include "Utils/Result.hpp"
@@ -31,6 +34,46 @@ public:
 
 // Register result class structure
 class RegisterResult: public Result {};
+
+// TFA class structure
+class TFAuthentication {
+private:
+    int TFAuthenticationId;
+    int userId;
+    std::string token;
+    std::string code;
+    sql::Timestamp startTime;
+public:
+    int getTFAuthenticationId();
+    int getUserId();
+    User getUser();
+    std::string getToken();
+    std::string getCode();
+    sql::Timestamp getStartTime();
+
+    TFAuthentication(int _TFAuthenticationId);
+    TFAuthentication(User user, std::string _token, std::string _code, sql::Timestamp _startTime);
+    TFAuthentication(int _TFAuthenticationId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime);
+};
+
+// Session class structure
+class Session {
+private:
+    int sessionId;
+    int userId;
+    std::string token;
+    sql::Timestamp startTime;
+public:
+    int getSessionId();
+    int getUserId();
+    User getUser();
+    std::string getToken();
+    sql::Timestamp getStartTime();
+
+    Session(int _TFAuthenticationId);
+    Session(User user, std::string _token, sql::Timestamp _startTime);
+    Session(int _TFAuthenticationId, int _userId, std::string _token, sql::Timestamp _startTime);
+};
 
 // Authentication namespace
 namespace Authentication {

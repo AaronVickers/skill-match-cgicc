@@ -1,14 +1,14 @@
 // Include header file
-#include "Utils/MySqlInit.hpp"
+#include "Utils/MariaDBInit.hpp"
 
-// MySQL headers
-#include <cppconn/exception.h>
+// MariaDB header
+#include <mariadb/conncpp.hpp>
 
 // Constructor
-MySqlInit::MySqlInit() {
+MariaDBInit::MariaDBInit() {
     try {
         // Connect to database
-        driver = get_driver_instance();
+        driver = sql::mariadb::get_driver_instance();
         conn = driver->connect(DB_HOST, DB_USER, DB_PASS);
 
         // Set schema to use
@@ -23,6 +23,6 @@ MySqlInit::MySqlInit() {
 }
 
 // Destructor
-MySqlInit::~MySqlInit() {
+MariaDBInit::~MariaDBInit() {
     delete conn;
 }

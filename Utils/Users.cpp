@@ -1,13 +1,11 @@
 // Include header file
 #include "Utils/Users.hpp"
 
-// Initialised MySQL header
-#include "Utils/MySqlInit.hpp"
+// Initialised MariaDB header
+#include "Utils/MariaDBInit.hpp"
 
-// MySQL headers
-#include <cppconn/exception.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+// MariaDB header
+#include <mariadb/conncpp.hpp>
 
 // Required headers
 #include <string>
@@ -49,8 +47,8 @@ Role User::getRole() {
 User::User(int _userId) {
     userId = _userId;
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // SQL statement variable
     sql::PreparedStatement *pstmt;
@@ -71,9 +69,9 @@ User::User(int _userId) {
     res->next();
 
     // Get user details from row
-    username = res->getString("Username");
-    email = res->getString("Email");
-    passwordHashEncoded = res->getString("PasswordHashEncoded");
+    username = res->getString("Username").c_str();
+    email = res->getString("Email").c_str();
+    passwordHashEncoded = res->getString("PasswordHashEncoded").c_str();
     roleId = res->getInt("RoleId");
 
     // Delete result from memory
@@ -86,8 +84,8 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     passwordHashEncoded = _passwordHashEncoded;
     roleId = role.getRoleId();
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // SQL statement variable
     sql::Statement *stmt = db.conn->createStatement();
@@ -95,7 +93,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     // SQL result variable
     sql::ResultSet *res;
 
-    // Prepare user insert and ID select statement
+    // Prepare user insert
     pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId) VALUES (?,?,?,?)");
 
     // Insert values into statement
@@ -110,6 +108,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     // Delete statement from memory
     delete pstmt;
 
+    // Get primary key of new row
     res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
 
     // Get first row
@@ -134,8 +133,8 @@ UserResult Users::getUserByUsername(std::string username) {
     // Create result
     UserResult userResult = UserResult();
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // Handle connection error
     if (!db.getSuccess()) {
@@ -174,9 +173,9 @@ UserResult Users::getUserByUsername(std::string username) {
 
         // Get user details from first row
         int userId = res->getInt("UserId");
-        std::string username = res->getString("Username");
-        std::string email = res->getString("Email");
-        std::string passwordHashEncoded = res->getString("PasswordHashEncoded");
+        std::string username = res->getString("Username").c_str();
+        std::string email = res->getString("Email").c_str();
+        std::string passwordHashEncoded = res->getString("PasswordHashEncoded").c_str();
         int roleId = res->getInt("RoleId");
 
         // Store role in result
@@ -208,8 +207,8 @@ bool Users::doesAdminExist() {
         return true;
     }
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // Handle connection error
     if (!db.getSuccess()) {
