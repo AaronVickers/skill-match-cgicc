@@ -1,22 +1,21 @@
-// Initialised MySQL header
-#include "Utils/MySqlInit.hpp"
+// Initialised MariaDB header
+#include "Utils/MariaDBInit.hpp"
 
-// MySQL headers
-#include <cppconn/exception.h>
-#include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
+// MariaDB headers
+#include <mariadb/conncpp.hpp>
 
 // Required headers
+#include <iostream>
 #include <vector>
 
 // Use required namespaces
 using namespace std;
 
-// MySqlInit constructor
-MySqlInit::MySqlInit() {
+// MariaDBInit constructor
+MariaDBInit::MariaDBInit() {
     try {
         // Connect to database
-        driver = get_driver_instance();
+        driver = sql::mariadb::get_driver_instance();
         conn = driver->connect(DB_HOST, DB_USER, DB_PASS);
 
         // Set success
@@ -27,8 +26,8 @@ MySqlInit::MySqlInit() {
     }
 }
 
-// MySqlInit destructor
-MySqlInit::~MySqlInit() {
+// MariaDBInit destructor
+MariaDBInit::~MariaDBInit() {
     delete conn;
 }
 
@@ -52,8 +51,8 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // Handle connection error
     if (!db.getSuccess()) {

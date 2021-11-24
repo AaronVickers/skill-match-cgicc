@@ -1,13 +1,11 @@
 // Include header file
 #include "Utils/Authentication.hpp"
 
-// Initialised MySQL header
-#include "Utils/MySqlInit.hpp"
+// Initialised MariaDB header
+#include "Utils/MariaDBInit.hpp"
 
-// MySQL headers
-#include <cppconn/exception.h>
-#include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
+// MariaDB headers
+#include <mariadb/conncpp.hpp>
 
 // Argon2 header
 #include "argon2.h"

@@ -1,6 +1,6 @@
 // Initialised headers
 #include "Utils/CgiccInit.hpp"
-#include "Utils/MySqlInit.hpp"
+#include "Utils/MariaDBInit.hpp"
 
 // CGICC headers
 #include "cgicc/HTTPHTMLHeader.h"

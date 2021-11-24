@@ -1,13 +1,11 @@
 // Include header file
 #include "Utils/Skills.hpp"
 
-// Initialised MySQL header
-#include "Utils/MySqlInit.hpp"
+// Initialised MariaDB header
+#include "Utils/MariaDBInit.hpp"
 
-// MySQL headers
-#include <cppconn/exception.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+// MariaDB headers
+#include <mariadb/conncpp.hpp>
 
 // Required headers
 #include <string>
@@ -25,8 +23,8 @@ std::string Skill::getName() {
 Skill::Skill(int _skillId) {
     skillId = _skillId;
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // SQL statement variable
     sql::PreparedStatement *pstmt;
@@ -47,7 +45,7 @@ Skill::Skill(int _skillId) {
     res->next();
 
     // Get skill name from row
-    name = res->getString("Name");
+    name = res->getString("Name").c_str();
 
     // Delete result from memory
     delete res;
@@ -101,8 +99,8 @@ void SkillSearch::setApprovedState(bool newApprovedState) {
 SkillSearch::SkillSearch(int _skillSearchId) {
     skillSearchId = _skillSearchId;
 
-    // Initialise MySQL connection
-    MySqlInit db = MySqlInit();
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
 
     // SQL statement variable
     sql::PreparedStatement *pstmt;
