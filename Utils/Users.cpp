@@ -45,6 +45,7 @@ Role User::getRole() {
 }
 
 User::User(int _userId) {
+    // Set user ID
     userId = _userId;
 
     // Initialise MariaDB connection
@@ -79,6 +80,7 @@ User::User(int _userId) {
 }
 
 User::User(std::string _username, std::string _email, std::string _passwordHashEncoded, Role &role) {
+    // Initialise attributes with passed parameters
     username = _username;
     email = _email;
     passwordHashEncoded = _passwordHashEncoded;
@@ -248,3 +250,4 @@ bool Users::doesAdminExist() {
 
     return false;
 }
+// Initialise attributes with passed parameters
