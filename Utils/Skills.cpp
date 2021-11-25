@@ -151,7 +151,7 @@ SkillSearch::SkillSearch(int _skillSearchId, int _skillId, int _userId, bool _ap
     approvedState = _approvedState;
 }
 
-SkillResult getSkillByName(std::string name) {
+SkillResult Skills::getSkillByName(std::string name) {
     // Create result
     SkillResult skillResult = SkillResult();
 
@@ -161,7 +161,7 @@ SkillResult getSkillByName(std::string name) {
     return skillResult;
 }
 
-std::vector<User> getApprovedApplicantsBySkill(std::string skillName) {
+std::vector<User> Skills::getApprovedApplicantsBySkill(std::string skillName) {
     // Create applicants vector
     std::vector<User> applicants;
 
@@ -171,7 +171,7 @@ std::vector<User> getApprovedApplicantsBySkill(std::string skillName) {
     return applicants;
 }
 
-std::vector<User> getApprovedCompaniesBySkill(std::string skillName) {
+std::vector<User> Skills::getApprovedCompaniesBySkill(std::string skillName) {
     // Create companies vector
     std::vector<User> companies;
 
@@ -181,7 +181,7 @@ std::vector<User> getApprovedCompaniesBySkill(std::string skillName) {
     return companies;
 }
 
-std::vector<SkillSearch> getUnapprovedApplicantSkillSearches() {
+std::vector<SkillSearch> Skills::getUnapprovedApplicantSkillSearches() {
     // Create skill searches vector
     std::vector<SkillSearch> skillSearches;
 
@@ -191,7 +191,7 @@ std::vector<SkillSearch> getUnapprovedApplicantSkillSearches() {
     return skillSearches;
 }
 
-std::vector<SkillSearch> getUnapprovedCompanySkillSearches() {
+std::vector<SkillSearch> Skills::getUnapprovedCompanySkillSearches() {
     // Create skill searches vector
     std::vector<SkillSearch> skillSearches;
 
@@ -201,7 +201,7 @@ std::vector<SkillSearch> getUnapprovedCompanySkillSearches() {
     return skillSearches;
 }
 
-SkillSearchResult getUserSkillSearch(User &user) {
+SkillSearchResult Skills::getUserSkillSearch(User &user) {
     // Create result
     SkillSearchResult userSkillSearchResult = SkillSearchResult();
 
