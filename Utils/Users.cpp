@@ -122,6 +122,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
 }
 
 User::User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId) {
+    // Initialise all attributes with passed parameters
     userId = _userId;
     username = _username;
     email = _email;

@@ -28,6 +28,7 @@ MariaDBInit::MariaDBInit() {
 
 // MariaDBInit destructor
 MariaDBInit::~MariaDBInit() {
+    // Delete connection from memory
     delete conn;
 }
 

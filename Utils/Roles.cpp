@@ -21,6 +21,7 @@ std::string Role::getName() {
 }
 
 Role::Role(int _roleId) {
+    // Set role ID
     roleId = _roleId;
 
     // Initialise MariaDB connection
@@ -52,6 +53,7 @@ Role::Role(int _roleId) {
 }
 
 Role::Role(int _roleId, std::string _name) {
+    // Initialise all attributes with passed parameters
     roleId = _roleId;
     name = _name;
 }

@@ -51,6 +51,7 @@ sql::Timestamp TFAuthentication::getStartTime() {
 }
 
 TFAuthentication::TFAuthentication(int _TFAuthenticationId) {
+    // Set 2FA ID
     TFAuthenticationId = _TFAuthenticationId;
 
     // Initialise MariaDB connection
@@ -85,13 +86,17 @@ TFAuthentication::TFAuthentication(int _TFAuthenticationId) {
 }
 
 TFAuthentication::TFAuthentication(User user) {
+    // Set user ID
     userId = user.getUserId();
 
+    // Generate and set token
     sole::uuid tokenUUID = sole::uuid4();
     token = tokenUUID.str();
 
+    // Generate and set code
     code = Authentication::generateTFACode(6);
 
+    // TODO: Get and set start time
     startTime = "TEMP";
 
     // Initialise MariaDB connection
@@ -132,6 +137,7 @@ TFAuthentication::TFAuthentication(User user) {
 }
 
 TFAuthentication::TFAuthentication(int _TFAuthenticationId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime) {
+    // Initialise all attributes with passed parameters
     TFAuthenticationId = _TFAuthenticationId;
     userId = _userId;
     token = _token;
@@ -169,6 +175,7 @@ sql::Timestamp Session::getStartTime() {
 }
 
 Session::Session(int _sessionId) {
+    // Set session ID
     sessionId = _sessionId;
 
     // Initialise MariaDB connection
@@ -202,11 +209,14 @@ Session::Session(int _sessionId) {
 }
 
 Session::Session(User user) {
+    // Set user ID
     userId = user.getUserId();
 
+    // Generate and set token
     sole::uuid tokenUUID = sole::uuid4();
     token = tokenUUID.str();
 
+    // TODO: Get and set start time
     startTime = "TEMP";
 
     // Initialise MariaDB connection
@@ -246,6 +256,7 @@ Session::Session(User user) {
 }
 
 Session::Session(int _sessionId, int _userId, std::string _token, sql::Timestamp _startTime) {
+    // Initialise all attributes with passed parameters
     sessionId = _sessionId;
     userId = _userId;
     token = _token;
@@ -470,23 +481,6 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     // Return result
     return registerResult;
 }
-
-/*
-UserResult Authentication::getUserFromSessionToken(std::string sessionToken) {
-    // Create result
-    UserResult userResult = UserResult();
-
-    // TODO: Validate data format
-
-    // TODO: Find user by session token
-    
-    // Set result success
-    userResult.setSuccess(true);
-    
-    // Return result
-    return userResult;
-}
-*/
 
 std::string Authentication::generateTFACode(int codeLength) {
     // Use Mersenne Twister engine with random device seed

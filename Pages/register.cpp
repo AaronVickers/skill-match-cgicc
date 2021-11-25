@@ -66,19 +66,23 @@ void onGET(CgiccInit &cgi) {
         )
     );
 
+    // Create roles selection
     auto roleSelect = cgicc::select();
     roleSelect.set("name", "role");
 
+    // Add admin to roles selection if admin doesn't exist
     if (!Users::doesAdminExist()) {
         roleSelect.add(option("Administrator")
             .set("value", "Administrator")
         );
     }
 
+    // Add applicant to roles selection
     roleSelect.add(option("Applicant")
         .set("value", "Applicant")
     );
 
+    // Add company to roles selection
     roleSelect.add(option("Company")
         .set("value", "Company")
     );

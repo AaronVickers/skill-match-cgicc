@@ -21,6 +21,7 @@ std::string Skill::getName() {
 }
 
 Skill::Skill(int _skillId) {
+    // Set skill ID
     skillId = _skillId;
 
     // Initialise MariaDB connection
@@ -57,6 +58,7 @@ Skill::Skill(std::string _name) {
 }
 
 Skill::Skill(int _skillId, std::string _name) {
+    // Initialise all attributes with passed parameters
     skillId = _skillId;
     name = _name;
 }
@@ -103,6 +105,7 @@ void SkillSearch::setApprovedState(bool newApprovedState) {
 }
 
 SkillSearch::SkillSearch(int _skillSearchId) {
+    // Set skill search ID
     skillSearchId = _skillSearchId;
 
     // Initialise MariaDB connection
@@ -141,6 +144,7 @@ SkillSearch::SkillSearch(Skill &skill, User &user) {
 }
 
 SkillSearch::SkillSearch(int _skillSearchId, int _skillId, int _userId, bool _approvedState) {
+    // Initialise all attributes with passed parameters
     skillSearchId = _skillSearchId;
     skillId = _skillId;
     userId = _userId;
@@ -148,49 +152,61 @@ SkillSearch::SkillSearch(int _skillSearchId, int _skillId, int _userId, bool _ap
 }
 
 SkillResult getSkillByName(std::string name) {
+    // Create result
     SkillResult skillResult = SkillResult();
 
     // TODO: Get skill by name if it exists
 
+    // Return result
     return skillResult;
 }
 
 std::vector<User> getApprovedApplicantsBySkill(std::string skillName) {
+    // Create applicants vector
     std::vector<User> applicants;
 
     // TODO: Get approved applicants by approved searches
 
+    // Return applicants
     return applicants;
 }
 
 std::vector<User> getApprovedCompaniesBySkill(std::string skillName) {
+    // Create companies vector
     std::vector<User> companies;
 
     // TODO: Get approved companies by approved searches
 
+    // Return companies
     return companies;
 }
 
 std::vector<SkillSearch> getUnapprovedApplicantSkillSearches() {
+    // Create skill searches vector
     std::vector<SkillSearch> skillSearches;
 
     // TODO: Get unapproved applicant skill searches
 
+    // Return skill searches vector
     return skillSearches;
 }
 
 std::vector<SkillSearch> getUnapprovedCompanySkillSearches() {
+    // Create skill searches vector
     std::vector<SkillSearch> skillSearches;
 
     // TODO: Get unapproved company skill searches
 
+    // Return skill searches vector
     return skillSearches;
 }
 
 SkillSearchResult getUserSkillSearch(User &user) {
+    // Create result
     SkillSearchResult userSkillSearchResult = SkillSearchResult();
 
     // TODO: Get user's skill search
 
+    // Return result
     return userSkillSearchResult;
 }

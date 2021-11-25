@@ -24,5 +24,6 @@ MariaDBInit::MariaDBInit() {
 
 // Destructor
 MariaDBInit::~MariaDBInit() {
+    // Delete connection from memory
     delete conn;
 }

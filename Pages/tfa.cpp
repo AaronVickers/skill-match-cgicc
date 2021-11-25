@@ -86,6 +86,10 @@ void onPOST(CgiccInit &cgi) {
     cout << html() << head(title("Two-Factor Authentication")) << endl;
     cout << body();
 
+    // TODO: Validate TFA_TOKEN cookie
+    // TODO: Generate session for corresponding user
+    // TODO: Set SESSION_TOKEN cookie
+
     cout << p("Two-Factor Authentication POST Request");
 
     // End of response

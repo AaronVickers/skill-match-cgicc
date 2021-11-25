@@ -83,8 +83,6 @@ namespace Authentication {
 
     RegisterResult registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role);
 
-    UserResult getUserFromSessionToken(std::string sessionToken);
-
     std::string generateTFACode(int codeLength);
 }
 
