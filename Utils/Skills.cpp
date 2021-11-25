@@ -138,7 +138,6 @@ SkillSearch::SkillSearch(int _skillSearchId) {
     delete res;
 }
 
-
 SkillSearch::SkillSearch(Skill &skill, User &user) {
     // TODO: Create new skill search
 }

@@ -145,7 +145,6 @@ TFAuthentication::TFAuthentication(int _TFAuthenticationId, int _userId, std::st
     startTime = _startTime;
 }
 
-
 int Session::getSessionId() {
     // Return session ID
     return sessionId;
