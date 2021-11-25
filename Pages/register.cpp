@@ -16,7 +16,7 @@ using namespace cgicc;
 
 void onGET(CgiccInit &cgi) {
     // TODO: Redirect if logged in
-    
+
     // Required response data
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head(title("Register")) << endl;

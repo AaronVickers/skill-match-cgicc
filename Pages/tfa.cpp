@@ -40,7 +40,7 @@ void onGET(CgiccInit &cgi) {
 
         return;
     }
-    
+
     // TODO: Check if 2FA token is expired
 
     // Required response data
