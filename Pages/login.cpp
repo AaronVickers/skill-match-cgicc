@@ -6,6 +6,7 @@
 #include "cgicc/HTTPHTMLHeader.h"
 #include "cgicc/HTTPRedirectHeader.h"
 #include "cgicc/HTMLClasses.h"
+#include "cgicc/HTTPCookie.h"
 
 // Required headers
 #include "Utils/Authentication.hpp"
@@ -15,6 +16,8 @@ using namespace std;
 using namespace cgicc;
 
 void onGET(CgiccInit &cgi) {
+    // TODO: Redirect if logged in
+    
     // Required response data
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head(title("Login")) << endl;
@@ -82,9 +85,14 @@ void onPOST(CgiccInit &cgi) {
         return;
     }
 
-    // Redirect to 2FA page
+    // Create 2FA token cookie
+    HTTPCookie tfaTokenCookie = HTTPCookie("TFA_TOKEN", loginResult.tfaSession->getToken());
+
+    // Redirect to 2FA page with 2FA token cookie
     redirectLocation = "./tfa.cgi";
-    cout << HTTPRedirectHeader(redirectLocation, false) << endl;
+    cout << HTTPRedirectHeader(redirectLocation, false)
+        .setCookie(tfaTokenCookie)
+        << endl;
 }
 
 // Entry function
