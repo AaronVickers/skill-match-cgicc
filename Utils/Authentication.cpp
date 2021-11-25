@@ -84,11 +84,15 @@ TFAuthentication::TFAuthentication(int _TFAuthenticationId) {
     delete res;
 }
 
-TFAuthentication::TFAuthentication(User user, std::string _token, std::string _code, sql::Timestamp _startTime) {
+TFAuthentication::TFAuthentication(User user) {
     userId = user.getUserId();
-    token = _token;
-    code = _code;
-    startTime = _startTime;
+
+    sole::uuid tokenUUID = sole::uuid4();
+    token = tokenUUID.str();
+
+    code = Authentication::generateTFACode(6);
+
+    startTime = "TEMP";
 
     // Initialise MariaDB connection
     MariaDBInit db = MariaDBInit();
@@ -197,10 +201,13 @@ Session::Session(int _sessionId) {
     delete res;
 }
 
-Session::Session(User user, std::string _token, sql::Timestamp _startTime) {
+Session::Session(User user) {
     userId = user.getUserId();
-    token = _token;
-    startTime = _startTime;
+
+    sole::uuid tokenUUID = sole::uuid4();
+    token = tokenUUID.str();
+
+    startTime = "TEMP";
 
     // Initialise MariaDB connection
     MariaDBInit db = MariaDBInit();
@@ -289,7 +296,8 @@ LoginResult Authentication::login(std::string username, std::string password) {
         return loginResult;
     }
 
-    // TODO: Generate 2FA session
+    // Generate 2FA session
+    loginResult.tfaSession = new TFAuthentication(*userResult.user);
 
     // Set result success
     loginResult.setSuccess(true);
@@ -479,3 +487,24 @@ UserResult Authentication::getUserFromSessionToken(std::string sessionToken) {
     return userResult;
 }
 */
+
+std::string Authentication::generateTFACode(int codeLength) {
+    // Use Mersenne Twister engine with random device seed
+    std::random_device rd;
+    std::mt19937 generator(rd());
+
+    // Define distribution of characters
+    std::uniform_int_distribution<int> distribution('0', '9');
+
+    // 2FA code string filled with null bytes
+    std::string tfaCode(codeLength, '\0');
+
+    // For each character in 2FA code string
+    for(auto &dis: tfaCode) {
+        // Replace with random character
+        dis = distribution(generator);
+    }
+    
+    // Return 2FA code
+    return tfaCode;
+}

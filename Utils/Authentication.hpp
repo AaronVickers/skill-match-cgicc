@@ -20,18 +20,6 @@
 // Forward declaration of required classes
 class User;
 
-// Login result class structure
-class LoginResult: public Result {
-public:
-    std::string TFAToken;
-};
-
-// 2FA result class structure
-class TFAResult: public Result {
-public:
-    std::string sessionToken;
-};
-
 // Register result class structure
 class RegisterResult: public Result {};
 
@@ -52,8 +40,14 @@ public:
     sql::Timestamp getStartTime();
 
     TFAuthentication(int _TFAuthenticationId);
-    TFAuthentication(User user, std::string _token, std::string _code, sql::Timestamp _startTime);
+    TFAuthentication(User user);
     TFAuthentication(int _TFAuthenticationId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime);
+};
+
+// Login result class structure
+class LoginResult: public Result {
+public:
+    TFAuthentication *tfaSession;
 };
 
 // Session class structure
@@ -71,8 +65,14 @@ public:
     sql::Timestamp getStartTime();
 
     Session(int _TFAuthenticationId);
-    Session(User user, std::string _token, sql::Timestamp _startTime);
+    Session(User user);
     Session(int _TFAuthenticationId, int _userId, std::string _token, sql::Timestamp _startTime);
+};
+
+// 2FA result class structure
+class TFAResult: public Result {
+public:
+    Session *session;
 };
 
 // Authentication namespace
@@ -84,6 +84,8 @@ namespace Authentication {
     RegisterResult registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role);
 
     UserResult getUserFromSessionToken(std::string sessionToken);
+
+    std::string generateTFACode(int codeLength);
 }
 
 // End of header guard
