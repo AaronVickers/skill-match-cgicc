@@ -22,12 +22,13 @@ public:
 
     Skill(int _skillId);
     Skill(std::string _name);
+    Skill(int _skillId, std::string _name);
 };
 
 // Skill result class structure
 class SkillResult: public Result {
 public:
-    Skill skill;
+    Skill *skill;
 };
 
 // SkillSearch class structure
@@ -49,19 +50,26 @@ public:
 
     SkillSearch(int _skillSearchId);
     SkillSearch(Skill &skill, User &user);
+    SkillSearch(int _skillSearchId, int _skillId, int _userId, bool _approvedState);
+};
+
+// Skill search result class structure
+class SkillSearchResult: public Result {
+public:
+    SkillSearch *skillSearch;
 };
 
 // Skills namespace
 namespace Skills {
-    SkillSearch getSkillByName(std::string name);
+    SkillResult getSkillByName(std::string name);
 
-    std::vector<User> getApprovedApplicantSkillSearchesByName(std::string name);
-    std::vector<User> getApprovedCompanySkillSearchesByName(std::string name);
+    std::vector<User> getApprovedApplicantsBySkill(std::string skillName);
+    std::vector<User> getApprovedCompaniesBySkill(std::string skillName);
 
     std::vector<SkillSearch> getUnapprovedApplicantSkillSearches();
     std::vector<SkillSearch> getUnapprovedCompanySkillSearches();
 
-    SkillSearch getUserSkillSearch(User &user);
+    SkillSearchResult getUserSkillSearch(User &user);
 }
 
 // End of header guard

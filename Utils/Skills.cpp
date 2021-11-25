@@ -52,7 +52,13 @@ Skill::Skill(int _skillId) {
 }
 
 Skill::Skill(std::string _name) {
-    
+    // TODO: Make sure skill doesn't exist
+    // TODO: Create new skill
+}
+
+Skill::Skill(int _skillId, std::string _name) {
+    skillId = _skillId;
+    name = _name;
 }
 
 int SkillSearch::getSkillSearchId() {
@@ -129,32 +135,62 @@ SkillSearch::SkillSearch(int _skillSearchId) {
     delete res;
 }
 
-/*
+
 SkillSearch::SkillSearch(Skill &skill, User &user) {
-
+    // TODO: Create new skill search
 }
 
-SkillSearch Skills::getSkillByName(std::string name) {
-
+SkillSearch::SkillSearch(int _skillSearchId, int _skillId, int _userId, bool _approvedState) {
+    skillSearchId = _skillSearchId;
+    skillId = _skillId;
+    userId = _userId;
+    approvedState = _approvedState;
 }
 
-std::vector<User> Skills::getApprovedApplicantSkillSearchesByName(std::string name) {
-    
+SkillResult getSkillByName(std::string name) {
+    SkillResult skillResult = SkillResult();
+
+    // TODO: Get skill by name if it exists
+
+    return skillResult;
 }
 
-std::vector<User> Skills::getApprovedCompanySkillSearchesByName(std::string name) {
-    
+std::vector<User> getApprovedApplicantsBySkill(std::string skillName) {
+    std::vector<User> applicants;
+
+    // TODO: Get approved applicants by approved searches
+
+    return applicants;
 }
 
-std::vector<SkillSearch> Skills::getUnapprovedApplicantSkillSearches() {
-    
+std::vector<User> getApprovedCompaniesBySkill(std::string skillName) {
+    std::vector<User> companies;
+
+    // TODO: Get approved companies by approved searches
+
+    return companies;
 }
 
-std::vector<SkillSearch> Skills::getUnapprovedCompanySkillSearches() {
-    
+std::vector<SkillSearch> getUnapprovedApplicantSkillSearches() {
+    std::vector<SkillSearch> skillSearches;
+
+    // TODO: Get unapproved applicant skill searches
+
+    return skillSearches;
 }
 
-SkillSearch Skills::getUserSkillSearch(User &user) {
-    
+std::vector<SkillSearch> getUnapprovedCompanySkillSearches() {
+    std::vector<SkillSearch> skillSearches;
+
+    // TODO: Get unapproved company skill searches
+
+    return skillSearches;
 }
-*/
+
+SkillSearchResult getUserSkillSearch(User &user) {
+    SkillSearchResult userSkillSearchResult = SkillSearchResult();
+
+    // TODO: Get user's skill search
+
+    return userSkillSearchResult;
+}
