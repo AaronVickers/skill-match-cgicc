@@ -4,7 +4,9 @@
 
 // CGICC headers
 #include "cgicc/HTTPHTMLHeader.h"
+#include "cgicc/HTTPRedirectHeader.h"
 #include "cgicc/HTMLClasses.h"
+#include "cgicc/HTTPCookie.h"
 
 // Required headers
 #include "Utils/Authentication.hpp"
@@ -14,6 +16,33 @@ using namespace std;
 using namespace cgicc;
 
 void onGET(CgiccInit &cgi) {
+    // Get list of cookies
+    vector<HTTPCookie> cookies = cgi.env.getCookieList();
+
+    // Placeholder for 2FA token cookie and found status
+    bool tfaTokenCookieFound = false;
+    HTTPCookie tfaTokenCookie;
+
+    // Find 2FA token cookie
+    for (auto &cookie: cookies) {
+        if (cookie.getName().compare("TFA_TOKEN") == 0) {
+            tfaTokenCookieFound = true;
+            tfaTokenCookie = cookie;
+
+            break;
+        }
+    }
+
+    // Check if 2FA token cookie was found
+    if (!tfaTokenCookieFound) {
+        // Redirect to login page with error message
+        cout << HTTPRedirectHeader("./login.cgi?error=invalid_session", false) << endl;
+
+        return;
+    }
+    
+    // TODO: Check if 2FA token is expired
+
     // Required response data
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head(title("Two-Factor Authentication")) << endl;
