@@ -89,7 +89,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     // Initialise MariaDB connection
     MariaDBInit db = MariaDBInit();
 
-    // SQL statement variable
+    // SQL statement variables
     sql::Statement *stmt = db.conn->createStatement();
     sql::PreparedStatement *pstmt;
     // SQL result variable
