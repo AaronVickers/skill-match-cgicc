@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
                 UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL, \
                 Code VARCHAR(6) NOT NULL, \
-                StartTime TIMESTAMP NOT NULL, \
+                StartTime VARCHAR(128) NOT NULL, \
                 PRIMARY KEY (TFAuthenticationId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
                 SessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL, \
-                StartTime TIMESTAMP NOT NULL, \
+                StartTime VARCHAR(128) NOT NULL, \
                 PRIMARY KEY (SessionId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \
