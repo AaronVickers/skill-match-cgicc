@@ -99,17 +99,17 @@ int main(int argc, char *argv[]) {
             ); \
         ");
 
-        // Create 'TFAuthentication' table
+        // Create 'TFASession' table
         stmt->execute(" \
-            CREATE TABLE TFAuthentication ( \
-                TFAuthenticationId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
+            CREATE TABLE TFASession ( \
+                TFASessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL UNIQUE, \
                 Code VARCHAR(6) NOT NULL, \
                 StartTime VARCHAR(128) NOT NULL, \
                 FailedAttempts INT NOT NULL, \
                 Authenticated BOOLEAN NOT NULL, \
-                PRIMARY KEY (TFAuthenticationId), \
+                PRIMARY KEY (TFASessionId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \
         ");

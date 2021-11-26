@@ -139,7 +139,7 @@ void onPOST(CgiccInit &cgi) {
     if (!tfaResult.getSuccess()) {
         string errorMsg = tfaResult.getErrorMsg();
 
-        if (errorMsg.compare("invalid_tfa_session") == 0) {
+        if (errorMsg.compare("invalid_tfa_session") == 0 || errorMsg.compare("account_locked") == 0) {
             // Redirect to login page with error message
             redirectLocation = "./login.cgi?error=" + errorMsg;
         } else {

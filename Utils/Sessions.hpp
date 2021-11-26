@@ -1,6 +1,6 @@
 // Header guard
-#ifndef SESSION_H_
-#define SESSION_H_
+#ifndef SESSIONS_H_
+#define SESSIONS_H_
 
 // MariaDB header
 #include <mariadb/conncpp.hpp>
@@ -27,9 +27,9 @@ public:
 
     void setActive(bool _active);
 
-    Session(int _TFAuthenticationId);
+    Session(int _sessionId);
     Session(User user);
-    Session(int _TFAuthenticationId, int _userId, std::string _token, sql::Timestamp _startTime, bool _active);
+    Session(int _sessionId, int _userId, std::string _token, sql::Timestamp _startTime, bool _active);
 };
 
 // Session result class structure

@@ -49,9 +49,35 @@ bool User::getLocked() {
     return locked;
 }
 
-void User::setLocked(bool _locked) {
-    // TODO: Set account locked status
-    locked = _locked;
+void User::setLocked(bool newLocked) {
+    // Avoid updating with no change
+    if (locked == newLocked) {
+        return;
+    }
+
+    // Set account locked status
+    locked = newLocked;
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+
+    // Prepare user update statement
+    pstmt = db.conn->prepareStatement(" \
+        UPDATE Users \
+        SET Locked=? \
+        WHERE UserId=? \
+    ");
+
+    // Execute query
+    pstmt->setBoolean(1, locked);
+    pstmt->setInt(2, userId);
+    pstmt->execute();
+
+    // Delete statement from memory
+    delete pstmt;
 }
 
 User::User(int _userId) {

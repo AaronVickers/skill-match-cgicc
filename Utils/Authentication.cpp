@@ -16,8 +16,8 @@
 #include "Utils/Users.hpp"
 #include "Utils/Roles.hpp"
 #include "Utils/Skills.hpp"
-#include "Utils/TFAuthentication.hpp"
-#include "Utils/Session.hpp"
+#include "Utils/TFASessions.hpp"
+#include "Utils/Sessions.hpp"
 #include "Utils/sole.hpp"
 
 RegisterResult Authentication::registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role) {
@@ -228,7 +228,7 @@ LoginResult Authentication::login(std::string username, std::string password) {
     }
 
     // Generate 2FA session
-    loginResult.tfaSession = new TFAuthentication(*userResult.user);
+    loginResult.tfaSession = new TFASession(*userResult.user);
 
     // Set result success
     loginResult.setSuccess(true);
@@ -276,20 +276,37 @@ TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
 
     // Handle invalid code format
     if (!codeValid) {
+        // Set error
         tfaSubmitResult.setError("invalid_code");
 
+        // Return result
         return tfaSubmitResult;
     }
 
     // Submit code
     bool wasValidCode = tfaResult.tfaSession->submitCode(code);
 
+    // Lock account after failed guesses
+    if (tfaResult.tfaSession->getFailedAttempts() >= MAX_TFA_ATTEMPTS) {
+        // Get user
+        User tfaUser = tfaResult.tfaSession->getUser();
+
+        // Update locked status
+        tfaUser.setLocked(true);
+
+        // Set error 
+        tfaSubmitResult.setError("account_locked");
+
+        // Return result
+        return tfaSubmitResult;
+    }
+
     // Validate 2FA code
     if (!wasValidCode) {
-        // TODO: Lock account at 5 failed guesses
-
+        // Set error
         tfaSubmitResult.setError("invalid_code");
 
+        // Return result
         return tfaSubmitResult;
     }
 
@@ -326,7 +343,7 @@ TFAResult Authentication::getTFAByToken(std::string token) {
         sql::ResultSet *res;
 
         // Prepare 2FA select statement
-        pstmt = db.conn->prepareStatement("SELECT * FROM TFAuthentication WHERE Token=?");
+        pstmt = db.conn->prepareStatement("SELECT * FROM TFASession WHERE Token=?");
 
         // Execute query
         pstmt->setString(1, token);
@@ -346,7 +363,7 @@ TFAResult Authentication::getTFAByToken(std::string token) {
         }
 
         // Get 2FA details from row
-        int TFAuthenticationId = res->getInt("TFAuthenticationId");
+        int tfaSessionId = res->getInt("TFASessionId");
         int userId = res->getInt("UserId");
         std::string token = res->getString("Token").c_str();
         std::string code = res->getString("Code").c_str();
@@ -355,7 +372,7 @@ TFAResult Authentication::getTFAByToken(std::string token) {
         bool authenticated = res->getBoolean("Authenticated");
 
         // Store TFA session in result
-        tfaResult.tfaSession = new TFAuthentication(TFAuthenticationId, userId, token, code, startTime, failedAttempts, authenticated);
+        tfaResult.tfaSession = new TFASession(tfaSessionId, userId, token, code, startTime, failedAttempts, authenticated);
 
         // Delete result from memory
         delete res;

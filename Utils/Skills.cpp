@@ -142,10 +142,34 @@ bool SkillSearch::getApprovedState() {
 }
 
 void SkillSearch::setApprovedState(bool newApprovedState) {
+    // Avoid updating with no change
+    if (approvedState == newApprovedState) {
+        return;
+    }
+
     // Update approved state
     approvedState = newApprovedState;
 
-    // TODO: Update approved state in database
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+
+    // Prepare skill search update statement
+    pstmt = db.conn->prepareStatement(" \
+        UPDATE SkillSearches \
+        SET ApprovedState=? \
+        WHERE SkillSearchId=? \
+    ");
+
+    // Execute query
+    pstmt->setBoolean(1, approvedState);
+    pstmt->setInt(2, skillSearchId);
+    pstmt->execute();
+
+    // Delete statement from memory
+    delete pstmt;
 }
 
 SkillSearch::SkillSearch(int _skillSearchId) {

@@ -1,5 +1,5 @@
 // Include header file
-#include "Utils/Session.hpp"
+#include "Utils/Sessions.hpp"
 
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
@@ -45,9 +45,35 @@ bool Session::getActive() {
     return active;
 }
 
-void Session::setActive(bool _active) {
-    // TODO: Set session active status
-    active = _active;
+void Session::setActive(bool newActive) {
+    // Avoid updating with no change
+    if (active == newActive) {
+        return;
+    }
+
+    // Set session active status
+    active = newActive;
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // SQL statement variable
+    sql::PreparedStatement *pstmt;
+
+    // Prepare session update statement
+    pstmt = db.conn->prepareStatement(" \
+        UPDATE Sessions \
+        SET Active=? \
+        WHERE SessionId=? \
+    ");
+
+    // Execute query
+    pstmt->setBoolean(1, active);
+    pstmt->setInt(2, sessionId);
+    pstmt->execute();
+
+    // Delete statement from memory
+    delete pstmt;
 }
 
 Session::Session(int _sessionId) {

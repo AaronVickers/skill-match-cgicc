@@ -16,8 +16,8 @@
 #include <string>
 #include "Utils/Result.hpp"
 #include "Utils/Users.hpp"
-#include "Utils/TFAuthentication.hpp"
-#include "Utils/Session.hpp"
+#include "Utils/TFASessions.hpp"
+#include "Utils/Sessions.hpp"
 
 // Forward declaration of required classes
 class User;
