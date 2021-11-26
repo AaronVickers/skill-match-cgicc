@@ -16,11 +16,20 @@ using namespace std;
 using namespace cgicc;
 
 void onGET(CgiccInit &cgi) {
-    
-}
+    // TODO: Redirect if not logged in as company
+    // TODO: Show list of approved applicants with company's skill
 
-void onPOST(CgiccInit &cgi) {
-    
+    // Required response data
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head(title("Company")) << endl;
+    cout << body();
+
+    // Temporary response
+    cout << h1("Company");
+    cout << p("Temporary response");
+
+    // End of response
+    cout << body() << html();
 }
 
 // Entry function
@@ -32,9 +41,6 @@ int main(int argc, char *argv[]) {
     if (cgi.env.getRequestMethod() == "GET") {
         // Handle GET request
         onGET(cgi);
-    } else if (cgi.env.getRequestMethod() == "POST") {
-        // Handle POST request
-        onPOST(cgi);
     }
 
     return 0;

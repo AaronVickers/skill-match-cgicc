@@ -16,11 +16,26 @@ using namespace std;
 using namespace cgicc;
 
 void onGET(CgiccInit &cgi) {
-    
+    // TODO: Redirect if not logged in as admin
+    // TODO: Show list of unapproved applicants
+    // TODO: Show list of unapproved companies
+
+    // Required response data
+    cout << HTTPHTMLHeader() << endl;
+    cout << html() << head(title("Admin")) << endl;
+    cout << body();
+
+    // Temporary response
+    cout << h1("Admin");
+    cout << p("Temporary response");
+
+    // End of response
+    cout << body() << html();
 }
 
 void onPOST(CgiccInit &cgi) {
-    
+    // TODO: Approve supplied applicants
+    // TODO: Approve supplied companies
 }
 
 // Entry function
