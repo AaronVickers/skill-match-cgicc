@@ -85,6 +85,8 @@ void onPOST(CgiccInit &cgi) {
         return;
     }
 
+    // TODO: Send email with 2FA code
+
     // Create 2FA token cookie
     HTTPCookie tfaTokenCookie = HTTPCookie("TFA_TOKEN", loginResult.tfaSession->getToken());
 

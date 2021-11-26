@@ -85,6 +85,7 @@ int main(int argc, char *argv[]) {
         ");
 
         // Create 'Users' table
+        // UNIQUE constraint on username is case-insensitive by default
         stmt->execute(" \
             CREATE TABLE Users ( \
                 UserId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
@@ -92,6 +93,7 @@ int main(int argc, char *argv[]) {
                 Email VARCHAR(320) NOT NULL, \
                 PasswordHashEncoded VARCHAR(128) NOT NULL, \
                 RoleId INT UNSIGNED NOT NULL, \
+                Locked BOOLEAN NOT NULL, \
                 PRIMARY KEY (UserId), \
                 FOREIGN KEY (RoleId) REFERENCES Roles(RoleId) \
             ); \
@@ -102,9 +104,11 @@ int main(int argc, char *argv[]) {
             CREATE TABLE TFAuthentication ( \
                 TFAuthenticationId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 UserId INT UNSIGNED NOT NULL, \
-                Token VARCHAR(128) NOT NULL, \
+                Token VARCHAR(128) NOT NULL UNIQUE, \
                 Code VARCHAR(6) NOT NULL, \
                 StartTime VARCHAR(128) NOT NULL, \
+                FailedAttempts INT NOT NULL, \
+                Authenticated BOOLEAN NOT NULL, \
                 PRIMARY KEY (TFAuthenticationId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \
@@ -115,8 +119,9 @@ int main(int argc, char *argv[]) {
             CREATE TABLE Sessions ( \
                 SessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 UserId INT UNSIGNED NOT NULL, \
-                Token VARCHAR(128) NOT NULL, \
+                Token VARCHAR(128) NOT NULL UNIQUE, \
                 StartTime VARCHAR(128) NOT NULL, \
+                Active BOOLEAN NOT NULL, \
                 PRIMARY KEY (SessionId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
             ); \

@@ -44,6 +44,16 @@ Role User::getRole() {
     return role;
 }
 
+bool User::getLocked() {
+    // Return role
+    return locked;
+}
+
+void User::setLocked(bool _locked) {
+    // TODO: Set account locked status
+    locked = _locked;
+}
+
 User::User(int _userId) {
     // Set user ID
     userId = _userId;
@@ -74,6 +84,7 @@ User::User(int _userId) {
     email = res->getString("Email").c_str();
     passwordHashEncoded = res->getString("PasswordHashEncoded").c_str();
     roleId = res->getInt("RoleId");
+    locked = res->getBoolean("Locked");
 
     // Delete result from memory
     delete res;
@@ -85,6 +96,7 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     email = _email;
     passwordHashEncoded = _passwordHashEncoded;
     roleId = role.getRoleId();
+    locked = false;
 
     // Initialise MariaDB connection
     MariaDBInit db = MariaDBInit();
@@ -96,13 +108,14 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     sql::ResultSet *res;
 
     // Prepare user insert
-    pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId) VALUES (?,?,?,?)");
+    pstmt = db.conn->prepareStatement("INSERT INTO Users (Username, Email, PasswordHashEncoded, RoleId, Locked) VALUES (?,?,?,?,?)");
 
     // Insert values into statement
     pstmt->setString(1, username);
     pstmt->setString(2, email);
     pstmt->setString(3, passwordHashEncoded);
     pstmt->setInt(4, roleId);
+    pstmt->setBoolean(5, locked);
 
     // Execute query
     pstmt->execute();
@@ -123,13 +136,14 @@ User::User(std::string _username, std::string _email, std::string _passwordHashE
     delete res;
 }
 
-User::User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId) {
+User::User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId, bool _locked) {
     // Initialise all attributes with passed parameters
     userId = _userId;
     username = _username;
     email = _email;
     passwordHashEncoded = _passwordHashEncoded;
     roleId = _roleId;
+    locked = _locked;
 }
 
 UserResult Users::getUserByUsername(std::string username) {
@@ -154,7 +168,7 @@ UserResult Users::getUserByUsername(std::string username) {
         // SQL result variable
         sql::ResultSet *res;
 
-        // Prepare role select statement
+        // Prepare user select statement ignoring username case
         pstmt = db.conn->prepareStatement("SELECT * FROM Users WHERE Username=?");
 
         // Execute query
@@ -180,9 +194,10 @@ UserResult Users::getUserByUsername(std::string username) {
         std::string email = res->getString("Email").c_str();
         std::string passwordHashEncoded = res->getString("PasswordHashEncoded").c_str();
         int roleId = res->getInt("RoleId");
+        bool locked = res->getBoolean("Locked");
 
-        // Store role in result
-        userResult.user = new User(userId, username, email, passwordHashEncoded, roleId);
+        // Store user in result
+        userResult.user = new User(userId, username, email, passwordHashEncoded, roleId, locked);
 
         // Delete result from memory
         delete res;
@@ -202,14 +217,6 @@ UserResult Users::getUserByUsername(std::string username) {
 }
 
 bool Users::doesAdminExist() {
-    // Get admin role
-    RoleResult adminRoleResult = Roles::getRoleByName("Administrator");
-
-    // Fail-safe if there is an error getting admin role
-    if (!adminRoleResult.getSuccess()) {
-        return true;
-    }
-
     // Initialise MariaDB connection
     MariaDBInit db = MariaDBInit();
 
@@ -225,11 +232,15 @@ bool Users::doesAdminExist() {
         // SQL result variable
         sql::ResultSet *res;
 
-        // Prepare role select statement
-        pstmt = db.conn->prepareStatement("SELECT 1 FROM Users WHERE RoleId=?");
+        // Prepare user select statement
+        pstmt = db.conn->prepareStatement(" \
+            SELECT * FROM Users \
+            INNER JOIN Roles ON Roles.RoleId=Users.RoleId \
+            WHERE Roles.Name=? \
+        ");
 
         // Execute query
-        pstmt->setInt(1, adminRoleResult.role->getRoleId());
+        pstmt->setString(1, "Administrator");
         res = pstmt->executeQuery();
 
         // Check if result has any rows

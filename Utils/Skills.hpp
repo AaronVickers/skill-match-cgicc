@@ -59,15 +59,21 @@ public:
     SkillSearch *skillSearch;
 };
 
+// Skill searches result class structure
+class SkillSearchesResult: public Result {
+public:
+    std::vector<SkillSearch> skillSearches;
+};
+
 // Skills namespace
 namespace Skills {
     SkillResult getSkillByName(std::string name);
 
-    std::vector<User> getApprovedApplicantsBySkill(std::string skillName);
-    std::vector<User> getApprovedCompaniesBySkill(std::string skillName);
+    UsersResult getApprovedApplicantsBySkill(std::string skillName);
+    UsersResult getApprovedCompaniesBySkill(std::string skillName);
 
-    std::vector<SkillSearch> getUnapprovedApplicantSkillSearches();
-    std::vector<SkillSearch> getUnapprovedCompanySkillSearches();
+    SkillSearchesResult getUnapprovedApplicantSkillSearches();
+    SkillSearchesResult getUnapprovedCompanySkillSearches();
 
     SkillSearchResult getUserSkillSearch(User &user);
 }

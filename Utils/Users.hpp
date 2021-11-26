@@ -4,6 +4,7 @@
 
 // Required headers
 #include <string>
+#include <vector>
 #include "Utils/Result.hpp"
 #include "Utils/Roles.hpp"
 
@@ -18,6 +19,7 @@ private:
     std::string email;
     std::string passwordHashEncoded;
     int roleId;
+    bool locked;
 public:
     int getUserId();
     std::string getUsername();
@@ -25,16 +27,25 @@ public:
     std::string getPasswordHashEncoded();
     int getRoleId();
     Role getRole();
+    bool getLocked();
+
+    void setLocked(bool _locked);
 
     User(int _userId);
     User(std::string _username, std::string _email, std::string password, Role &role);
-    User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId);
+    User(int _userId, std::string _username, std::string _email, std::string _passwordHashEncoded, int _roleId, bool _locked);
 };
 
 // User result class structure
 class UserResult: public Result {
 public:
     User *user;
+};
+
+// Users result class structure
+class UsersResult: public Result {
+public:
+    std::vector<User> users;
 };
 
 // Users namespace

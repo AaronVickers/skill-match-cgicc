@@ -15,323 +15,10 @@
 #include <regex>
 #include "Utils/Users.hpp"
 #include "Utils/Roles.hpp"
+#include "Utils/Skills.hpp"
+#include "Utils/TFAuthentication.hpp"
+#include "Utils/Session.hpp"
 #include "Utils/sole.hpp"
-
-int TFAuthentication::getTFAuthenticationId() {
-    // Return 2FA ID
-    return TFAuthenticationId;
-}
-
-int TFAuthentication::getUserId() {
-    // Return user ID
-    return userId;
-}
-
-User TFAuthentication::getUser() {
-    // Get 2FA user
-    User user = User(userId);
-
-    // Return user
-    return user;
-}
-
-std::string TFAuthentication::getToken() {
-    // Return token
-    return token;
-}
-
-std::string TFAuthentication::getCode() {
-    // Return code
-    return code;
-}
-
-sql::Timestamp TFAuthentication::getStartTime() {
-    // Return start time
-    return startTime;
-}
-
-TFAuthentication::TFAuthentication(int _TFAuthenticationId) {
-    // Set 2FA ID
-    TFAuthenticationId = _TFAuthenticationId;
-
-    // Initialise MariaDB connection
-    MariaDBInit db = MariaDBInit();
-
-    // SQL statement variable
-    sql::PreparedStatement *pstmt;
-    // SQL result variable
-    sql::ResultSet *res;
-
-    // Prepare 2FA select statement
-    pstmt = db.conn->prepareStatement("SELECT * FROM TFAuthentication WHERE TFAuthenticationId=?");
-
-    // Execute query
-    pstmt->setInt(1, TFAuthenticationId);
-    res = pstmt->executeQuery();
-
-    // Delete statement from memory
-    delete pstmt;
-
-    // Get first row
-    res->next();
-
-    // Get 2FA details from row
-    userId = res->getInt("UserId");
-    token = res->getString("Token").c_str();
-    code = res->getString("Code").c_str();
-    startTime = res->getString("StartTime");
-
-    // Delete result from memory
-    delete res;
-}
-
-TFAuthentication::TFAuthentication(User user) {
-    // Set user ID
-    userId = user.getUserId();
-
-    // Generate and set token
-    sole::uuid tokenUUID = sole::uuid4();
-    token = tokenUUID.str();
-
-    // Generate and set code
-    code = Authentication::generateTFACode(6);
-
-    // TODO: Get and set start time
-    startTime = "TEMP";
-
-    // Initialise MariaDB connection
-    MariaDBInit db = MariaDBInit();
-
-    // SQL statement variable
-    sql::Statement *stmt = db.conn->createStatement();
-    sql::PreparedStatement *pstmt;
-    // SQL result variable
-    sql::ResultSet *res;
-
-    // Prepare 2FA insert
-    pstmt = db.conn->prepareStatement("INSERT INTO TFAuthentication (UserId, Token, Code, StartTime) VALUES (?,?,?,?)");
-
-    // Insert values into statement
-    pstmt->setInt(1, userId);
-    pstmt->setString(2, token);
-    pstmt->setString(3, code);
-    pstmt->setString(4, startTime);
-
-    // Execute query
-    pstmt->execute();
-
-    // Delete statement from memory
-    delete pstmt;
-
-    // Get primary key of new row
-    res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
-
-    // Get first row
-    res->next();
-
-    // Get 2FA ID from row
-    TFAuthenticationId = res->getInt(1);
-
-    // Delete result from memory
-    delete res;
-}
-
-TFAuthentication::TFAuthentication(int _TFAuthenticationId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime) {
-    // Initialise all attributes with passed parameters
-    TFAuthenticationId = _TFAuthenticationId;
-    userId = _userId;
-    token = _token;
-    code = _code;
-    startTime = _startTime;
-}
-
-int Session::getSessionId() {
-    // Return session ID
-    return sessionId;
-}
-
-int Session::getUserId() {
-    // Return user ID
-    return userId;
-}
-
-User Session::getUser() {
-    // Get session user
-    User user = User(userId);
-
-    // Return user
-    return user;
-}
-
-std::string Session::getToken() {
-    // Return token
-    return token;
-}
-
-sql::Timestamp Session::getStartTime() {
-    // Return start time
-    return startTime;
-}
-
-Session::Session(int _sessionId) {
-    // Set session ID
-    sessionId = _sessionId;
-
-    // Initialise MariaDB connection
-    MariaDBInit db = MariaDBInit();
-
-    // SQL statement variable
-    sql::PreparedStatement *pstmt;
-    // SQL result variable
-    sql::ResultSet *res;
-
-    // Prepare session select statement
-    pstmt = db.conn->prepareStatement("SELECT * FROM Sessions WHERE SessionId=?");
-
-    // Execute query
-    pstmt->setInt(1, sessionId);
-    res = pstmt->executeQuery();
-
-    // Delete statement from memory
-    delete pstmt;
-
-    // Get first row
-    res->next();
-
-    // Get session details from row
-    userId = res->getInt("UserId");
-    token = res->getString("Token").c_str();
-    startTime = res->getString("StartTime");
-
-    // Delete result from memory
-    delete res;
-}
-
-Session::Session(User user) {
-    // Set user ID
-    userId = user.getUserId();
-
-    // Generate and set token
-    sole::uuid tokenUUID = sole::uuid4();
-    token = tokenUUID.str();
-
-    // TODO: Get and set start time
-    startTime = "TEMP";
-
-    // Initialise MariaDB connection
-    MariaDBInit db = MariaDBInit();
-
-    // SQL statement variable
-    sql::Statement *stmt = db.conn->createStatement();
-    sql::PreparedStatement *pstmt;
-    // SQL result variable
-    sql::ResultSet *res;
-
-    // Prepare session insert
-    pstmt = db.conn->prepareStatement("INSERT INTO Sessions (UserId, Token, StartTime) VALUES (?,?,?)");
-
-    // Insert values into statement
-    pstmt->setInt(1, userId);
-    pstmt->setString(2, token);
-    pstmt->setString(3, startTime);
-
-    // Execute query
-    pstmt->execute();
-
-    // Delete statement from memory
-    delete pstmt;
-
-    // Get primary key of new row
-    res = stmt->executeQuery("SELECT LAST_INSERT_ID()");
-
-    // Get first row
-    res->next();
-
-    // Get session ID from row
-    sessionId = res->getInt(1);
-
-    // Delete result from memory
-    delete res;
-}
-
-Session::Session(int _sessionId, int _userId, std::string _token, sql::Timestamp _startTime) {
-    // Initialise all attributes with passed parameters
-    sessionId = _sessionId;
-    userId = _userId;
-    token = _token;
-    startTime = _startTime;
-}
-
-LoginResult Authentication::login(std::string username, std::string password) {
-    // Create result
-    LoginResult loginResult = LoginResult();
-
-    // Verify that all fields have a value
-    if (username.empty()) {
-        loginResult.setError("missing_username");
-
-        return loginResult;
-    } else if (password.empty()) {
-        loginResult.setError("missing_password");
-
-        return loginResult;
-    }
-
-    // Make sure user exists
-    UserResult userResult = Users::getUserByUsername(username);
-    if (!userResult.getSuccess()) {
-        loginResult.setError("invalid_username");
-
-        return loginResult;
-    }
-
-    // Get password hash encoded
-    std::string passwordHashEncoded = userResult.user->getPasswordHashEncoded();
-
-    // Variables for password hashing
-    const char *passwordCString = password.c_str();
-    const char *encodedCString = passwordHashEncoded.c_str();
-
-    // Verify password
-    int verifySuccess = argon2_verify(
-        encodedCString,
-        passwordCString, password.length(),
-        Argon2_id
-    );
-
-    // Handle incorrect password
-    if (verifySuccess != ARGON2_OK) {
-        loginResult.setError("incorrect_password");
-
-        return loginResult;
-    }
-
-    // Generate 2FA session
-    loginResult.tfaSession = new TFAuthentication(*userResult.user);
-
-    // Set result success
-    loginResult.setSuccess(true);
-    
-    // Return result
-    return loginResult;
-}
-
-TFAResult Authentication::submitTFA(std::string token, std::string code) {
-    // Create result
-    TFAResult tfaResult = TFAResult();
-
-    // TODO: Validate data format
-
-    // TODO: Validate 2FA code
-
-    // TODO: Generate authenticated session
-
-    // Set result success
-    tfaResult.setSuccess(true);
-    
-    // Return result
-    return tfaResult;
-}
 
 RegisterResult Authentication::registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role) {
     // Create result
@@ -413,6 +100,7 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
 
     // Admin role validation
     if (role.compare("Administrator") == 0) {
+        // Only allow 1 admin
         if (Users::doesAdminExist()) {
             roleResult.setError("An administrator already exists.");
         }
@@ -465,7 +153,14 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
 
     // Attempt to complete operation
     try {
+        // Get skill by name
+        Skill userSkill = Skill(skill);
+
+        // Create new user
         User newUser = User(username, email, passwordHashEncoded, *roleResult.role);
+
+        // Create new skill search
+        SkillSearch userSkillSearch(userSkill, newUser);
     } catch (sql::SQLException &sql_error) {
         // Set success to false and store error
         registerResult.setError(sql_error.what());
@@ -473,12 +168,279 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
         // Return result
         return registerResult;
     }
-    
+
     // Set result success
     registerResult.setSuccess(true);
 
     // Return result
     return registerResult;
+}
+
+LoginResult Authentication::login(std::string username, std::string password) {
+    // Create result
+    LoginResult loginResult = LoginResult();
+
+    // Verify that all fields have a value
+    if (username.empty()) {
+        loginResult.setError("missing_username");
+
+        return loginResult;
+    } else if (password.empty()) {
+        loginResult.setError("missing_password");
+
+        return loginResult;
+    }
+
+    // Make sure user exists
+    UserResult userResult = Users::getUserByUsername(username);
+    if (!userResult.getSuccess()) {
+        loginResult.setError("invalid_username");
+
+        return loginResult;
+    }
+
+    // Get password hash encoded
+    std::string passwordHashEncoded = userResult.user->getPasswordHashEncoded();
+
+    // Variables for password hashing
+    const char *passwordCString = password.c_str();
+    const char *encodedCString = passwordHashEncoded.c_str();
+
+    // Verify password
+    int verifySuccess = argon2_verify(
+        encodedCString,
+        passwordCString, password.length(),
+        Argon2_id
+    );
+
+    // Handle incorrect password
+    if (verifySuccess != ARGON2_OK) {
+        loginResult.setError("incorrect_password");
+
+        return loginResult;
+    }
+
+    // Handle locked account
+    if (userResult.user->getLocked()) {
+        loginResult.setError("account_locked");
+
+        return loginResult;
+    }
+
+    // Generate 2FA session
+    loginResult.tfaSession = new TFAuthentication(*userResult.user);
+
+    // Set result success
+    loginResult.setSuccess(true);
+
+    // Return result
+    return loginResult;
+}
+
+TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
+    // Create result
+    TFASubmitResult tfaSubmitResult = TFASubmitResult();
+
+    // Verify that all fields have a value
+    if (token.empty()) {
+        tfaSubmitResult.setError("missing_token");
+
+        return tfaSubmitResult;
+    } else if (code.empty()) {
+        tfaSubmitResult.setError("missing_code");
+
+        return tfaSubmitResult;
+    }
+
+    // Attempt to get 2FA session from token
+    TFAResult tfaResult = Authentication::getTFAByToken(token);
+    if (!tfaResult.getSuccess()) {
+        tfaSubmitResult.setError("invalid_tfa_session");
+
+        return tfaSubmitResult;
+    }
+
+    // Handle already authenticated 2FA session
+    if (tfaResult.tfaSession->getAuthenticated()) {
+        tfaSubmitResult.setError("invalid_tfa_session");
+
+        return tfaSubmitResult;
+    }
+
+    // TODO: Handle expired 2FA session
+
+    // Check code format
+    std::regex codeRegex = std::regex("^[0-9]{6}$");
+    std::smatch codeMatch;
+    bool codeValid = std::regex_match(code, codeMatch, codeRegex);
+
+    // Handle invalid code format
+    if (!codeValid) {
+        tfaSubmitResult.setError("invalid_code");
+
+        return tfaSubmitResult;
+    }
+
+    // Submit code
+    bool wasValidCode = tfaResult.tfaSession->submitCode(code);
+
+    // Validate 2FA code
+    if (!wasValidCode) {
+        // TODO: Lock account at 5 failed guesses
+
+        tfaSubmitResult.setError("invalid_code");
+
+        return tfaSubmitResult;
+    }
+
+    // Generate authenticated session
+    tfaSubmitResult.session = new Session(tfaResult.tfaSession->getUser());
+
+    // Set result success
+    tfaSubmitResult.setSuccess(true);
+
+    // Return result
+    return tfaSubmitResult;
+}
+
+TFAResult Authentication::getTFAByToken(std::string token) {
+    // Create result
+    TFAResult tfaResult = TFAResult();
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // Handle connection error
+    if (!db.getSuccess()) {
+        tfaResult.setError(db.getErrorMsg());
+
+        // Return result
+        return tfaResult;
+    }
+
+    // Attempt to complete operation
+    try {
+        // SQL statement variable
+        sql::PreparedStatement *pstmt;
+        // SQL result variable
+        sql::ResultSet *res;
+
+        // Prepare 2FA select statement
+        pstmt = db.conn->prepareStatement("SELECT * FROM TFAuthentication WHERE Token=?");
+
+        // Execute query
+        pstmt->setString(1, token);
+        res = pstmt->executeQuery();
+
+        // Delete statement from memory
+        delete pstmt;
+
+        // Error if no rows selected
+        if (!res->next()) {
+            // Delete result from memory
+            delete res;
+
+            tfaResult.setError("2FA session with provided token doesn't exist.");
+
+            return tfaResult;
+        }
+
+        // Get 2FA details from row
+        int TFAuthenticationId = res->getInt("TFAuthenticationId");
+        int userId = res->getInt("UserId");
+        std::string token = res->getString("Token").c_str();
+        std::string code = res->getString("Code").c_str();
+        sql::Timestamp startTime = res->getString("StartTime");
+        int failedAttempts = res->getInt("FailedAttempts");
+        bool authenticated = res->getBoolean("Authenticated");
+
+        // Store TFA session in result
+        tfaResult.tfaSession = new TFAuthentication(TFAuthenticationId, userId, token, code, startTime, failedAttempts, authenticated);
+
+        // Delete result from memory
+        delete res;
+    } catch (sql::SQLException &sql_error) {
+        // Handle SQL exception
+        tfaResult.setError(sql_error.what());
+
+        // Return result
+        return tfaResult;
+    }
+
+    // Set result success
+    tfaResult.setSuccess(true);
+
+    // Return result
+    return tfaResult;
+}
+
+SessionResult Authentication::getSessionByToken(std::string token) {
+    // Create result
+    SessionResult sessionResult = SessionResult();
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // Handle connection error
+    if (!db.getSuccess()) {
+        sessionResult.setError(db.getErrorMsg());
+
+        // Return result
+        return sessionResult;
+    }
+
+    // Attempt to complete operation
+    try {
+        // SQL statement variable
+        sql::PreparedStatement *pstmt;
+        // SQL result variable
+        sql::ResultSet *res;
+
+        // Prepare session select statement
+        pstmt = db.conn->prepareStatement("SELECT * FROM Sessions WHERE Token=?");
+
+        // Execute query
+        pstmt->setString(1, token);
+        res = pstmt->executeQuery();
+
+        // Delete statement from memory
+        delete pstmt;
+
+        // Error if no rows selected
+        if (!res->next()) {
+            // Delete result from memory
+            delete res;
+
+            sessionResult.setError("Session with provided token doesn't exist.");
+
+            return sessionResult;
+        }
+
+        // Get session details from row
+        int sessionId = res->getInt("SessionId");
+        int userId = res->getInt("UserId");
+        std::string token = res->getString("Token").c_str();
+        sql::Timestamp startTime = res->getString("StartTime");
+        bool active = res->getBoolean("Active");
+
+        // Store session in result
+        sessionResult.session = new Session(sessionId, userId, token, startTime, active);
+
+        // Delete result from memory
+        delete res;
+    } catch (sql::SQLException &sql_error) {
+        // Handle SQL exception
+        sessionResult.setError(sql_error.what());
+
+        // Return result
+        return sessionResult;
+    }
+
+    // Set result success
+    sessionResult.setSuccess(true);
+
+    // Return result
+    return sessionResult;
 }
 
 std::string Authentication::generateTFACode(int codeLength) {
@@ -497,7 +459,7 @@ std::string Authentication::generateTFACode(int codeLength) {
         // Replace with random character
         dis = distribution(generator);
     }
-    
+
     // Return 2FA code
     return tfaCode;
 }

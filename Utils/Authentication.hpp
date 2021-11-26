@@ -16,72 +16,32 @@
 #include <string>
 #include "Utils/Result.hpp"
 #include "Utils/Users.hpp"
+#include "Utils/TFAuthentication.hpp"
+#include "Utils/Session.hpp"
 
 // Forward declaration of required classes
 class User;
 
 // Register result class structure
-class RegisterResult: public Result {};
-
-// TFA class structure
-class TFAuthentication {
-private:
-    int TFAuthenticationId;
-    int userId;
-    std::string token;
-    std::string code;
-    sql::Timestamp startTime;
-public:
-    int getTFAuthenticationId();
-    int getUserId();
-    User getUser();
-    std::string getToken();
-    std::string getCode();
-    sql::Timestamp getStartTime();
-
-    TFAuthentication(int _TFAuthenticationId);
-    TFAuthentication(User user);
-    TFAuthentication(int _TFAuthenticationId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime);
-};
+class RegisterResult: public UserResult {};
 
 // Login result class structure
-class LoginResult: public Result {
-public:
-    TFAuthentication *tfaSession;
-};
-
-// Session class structure
-class Session {
-private:
-    int sessionId;
-    int userId;
-    std::string token;
-    sql::Timestamp startTime;
-public:
-    int getSessionId();
-    int getUserId();
-    User getUser();
-    std::string getToken();
-    sql::Timestamp getStartTime();
-
-    Session(int _TFAuthenticationId);
-    Session(User user);
-    Session(int _TFAuthenticationId, int _userId, std::string _token, sql::Timestamp _startTime);
-};
+class LoginResult: public TFAResult {};
 
 // 2FA result class structure
-class TFAResult: public Result {
-public:
-    Session *session;
-};
+class TFASubmitResult: public SessionResult {};
 
 // Authentication namespace
 namespace Authentication {
+    RegisterResult registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role);
+
     LoginResult login(std::string username, std::string password);
 
-    TFAResult submitTFA(std::string TFAToken, std::string code);
+    TFASubmitResult submitTFA(std::string token, std::string code);
 
-    RegisterResult registerAccount(std::string username, std::string email, std::string password, std::string skill, std::string role);
+    TFAResult getTFAByToken(std::string token);
+
+    SessionResult getSessionByToken(std::string token);
 
     std::string generateTFACode(int codeLength);
 }
