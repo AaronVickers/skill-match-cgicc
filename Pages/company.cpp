@@ -10,6 +10,9 @@
 #include "cgicc/HTMLClasses.h"
 #include "cgicc/HTTPCookie.h"
 
+// Component headers
+#include "Components/ApprovedApplicantsList.hpp"
+
 // Required headers
 #include <ostream>
 #include "Utils/Authentication.hpp"
@@ -28,16 +31,16 @@ private:
 // On GET request method
 void CompanyCGIPage::onGET(ostream &os) const {
     // TODO: Redirect if not logged in as company
-    // TODO: Show list of approved applicants with company's skill
+    // TODO: Get company's skill
 
     // Required response data
     os << HTTPHTMLHeader() << endl;
     os << html() << head(title("Company")) << endl;
     os << body();
 
-    // Temporary response
-    os << h1("Company");
-    os << p("Temporary response");
+    // TODO: Use company's skill
+    // Display list of approved applicants
+    os << ApprovedApplicantsList("test");
 
     // End of response
     os << body() << html();

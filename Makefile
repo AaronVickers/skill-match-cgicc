@@ -23,6 +23,10 @@ REGISTER_FORM_CPP = Components/RegisterForm.cpp
 REGISTER_FORM_HPP = Components/RegisterForm.hpp
 TFA_FORM_CPP = Components/TFAForm.cpp
 TFA_FORM_HPP = Components/TFAForm.hpp
+APPROVED_COMPANIES_LIST_CPP = Components/ApprovedCompaniesList.cpp
+APPROVED_COMPANIES_LIST_HPP = Components/ApprovedCompaniesList.hpp
+APPROVED_APPLICANTS_LIST_CPP = Components/ApprovedApplicantsList.cpp
+APPROVED_APPLICANTS_LIST_HPP = Components/ApprovedApplicantsList.hpp
 
 BUILD_DATABASE_CPP = Tools/build-database.cpp
 
@@ -64,12 +68,12 @@ tfa.cgi: $(TFA_CPP) TFAForm.o MariaDBInit.o Authentication.o Result.o Roles.o Sk
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) TFAForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Applicant CGI file
-applicant.cgi: $(APPLICANT_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPLICANT_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+applicant.cgi: $(APPLICANT_CPP) ApprovedCompaniesList.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPLICANT_CPP) ApprovedCompaniesList.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Company CGI file
-company.cgi: $(COMPANY_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(COMPANY_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+company.cgi: $(COMPANY_CPP) ApprovedApplicantsList.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(COMPANY_CPP) ApprovedApplicantsList.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Admin CGI file
 admin.cgi: $(ADMIN_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
@@ -90,6 +94,14 @@ RegisterForm.o: $(REGISTER_FORM_CPP) $(REGISTER_FORM_HPP)
 # 2FA form object file
 TFAForm.o: $(TFA_FORM_CPP) $(TFA_FORM_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_FORM_CPP) -c -o $@
+
+# Approved companies list object file
+ApprovedCompaniesList.o: $(APPROVED_COMPANIES_LIST_CPP) $(APPROVED_COMPANIES_LIST_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVED_COMPANIES_LIST_CPP) -c -o $@
+
+# Approved applicants list object file
+ApprovedApplicantsList.o: $(APPROVED_APPLICANTS_LIST_CPP) $(APPROVED_APPLICANTS_LIST_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVED_APPLICANTS_LIST_CPP) -c -o $@
 
 # MariaDBInit object file
 MariaDBInit.o: $(MARIADBINIT_CPP) $(MARIADBINIT_HPP)
