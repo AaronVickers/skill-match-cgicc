@@ -10,6 +10,9 @@
 #include "cgicc/HTMLClasses.h"
 #include "cgicc/HTTPCookie.h"
 
+// Component headers
+#include "Components/ApproveApplicantsForm.hpp"
+
 // Required headers
 #include <ostream>
 #include "Utils/Authentication.hpp"
@@ -23,6 +26,9 @@ class AdminCGIPage: public CGIPage {
 private:
     // On GET request method
     void onGET(std::ostream &os) const;
+
+    // On POST request method
+    void onPOST(std::ostream &os) const;
 };
 
 // On GET request method
@@ -31,22 +37,32 @@ void AdminCGIPage::onGET(ostream &os) const {
 
     // Required response data
     os << HTTPHTMLHeader() << endl;
-    os << html() << head(title("Admin")) << endl;
+    os << html() << head(title("Approve Applicants")) << endl;
     os << body();
 
     // Page heading
-    os << h1("Admin");
+    os << h1("Approve Applicants");
 
-    // Approve applicants link
-    os << a("Approve Applicants")
-        .set("href", "./approveApplicants.cgi");
+    // Display form to approve applicants
+    os << ApproveApplicantsForm();
 
-    // Line break between links
-    os << br();
+    // End of response
+    os << body() << html();
+}
 
-    // Approve companies link
-    os << a("Approve Companies")
-        .set("href", "./approveCompanies.cgi");
+// On POST request method
+void AdminCGIPage::onPOST(ostream &os) const {
+    // TODO: Verify that user is admin
+    // TODO: Approve supplied applicants
+    
+    // Required response data
+    os << HTTPHTMLHeader() << endl;
+    os << html() << head(title("Approve Applicants")) << endl;
+    os << body();
+
+    // Temporary response
+    os << h1("Approve Applicants");
+    os << p("POST request not implemented yet");
 
     // End of response
     os << body() << html();

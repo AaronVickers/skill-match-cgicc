@@ -16,6 +16,8 @@ TFA_CPP = Pages/tfa.cpp
 APPLICANT_CPP = Pages/applicant.cpp
 COMPANY_CPP = Pages/company.cpp
 ADMIN_CPP = Pages/admin.cpp
+APPROVE_APPLICANTS_CPP = Pages/approveApplicants.cpp
+APPROVE_COMPANIES_CPP = Pages/approveCompanies.cpp
 
 LOGIN_FORM_CPP = Components/LoginForm.cpp
 LOGIN_FORM_HPP = Components/LoginForm.hpp
@@ -27,6 +29,10 @@ APPROVED_COMPANIES_LIST_CPP = Components/ApprovedCompaniesList.cpp
 APPROVED_COMPANIES_LIST_HPP = Components/ApprovedCompaniesList.hpp
 APPROVED_APPLICANTS_LIST_CPP = Components/ApprovedApplicantsList.cpp
 APPROVED_APPLICANTS_LIST_HPP = Components/ApprovedApplicantsList.hpp
+APPROVE_APPLICANTS_FORM_CPP = Components/ApproveApplicantsForm.cpp
+APPROVE_APPLICANTS_FORM_HPP = Components/ApproveApplicantsForm.hpp
+APPROVE_COMPANIES_FORM_CPP = Components/ApproveCompaniesForm.cpp
+APPROVE_COMPANIES_FORM_HPP = Components/ApproveCompaniesForm.hpp
 
 BUILD_DATABASE_CPP = Tools/build-database.cpp
 
@@ -53,7 +59,7 @@ CGI_PAGE_CPP = Utils/CGIPage.cpp
 CGI_PAGE_HPP = Utils/CGIPage.hpp
 
 # All output files
-all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi build-database.out
+all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi approveApplicants.cgi approveCompanies.cgi build-database.out
 
 # Login CGI file
 login.cgi: $(LOGIN_CPP) LoginForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
@@ -79,6 +85,14 @@ company.cgi: $(COMPANY_CPP) ApprovedApplicantsList.o MariaDBInit.o Authenticatio
 admin.cgi: $(ADMIN_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(ADMIN_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
+# Approve applicants CGI file
+approveApplicants.cgi: $(APPROVE_APPLICANTS_CPP) ApproveApplicantsForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_APPLICANTS_CPP) ApproveApplicantsForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+
+# Approve companies CGI file
+approveCompanies.cgi: $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+
 # Database build file
 build-database.out: $(BUILD_DATABASE_CPP) Result.o
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(BUILD_DATABASE_CPP) Result.o -o $@ $(LIB_MARIADB)
@@ -102,6 +116,14 @@ ApprovedCompaniesList.o: $(APPROVED_COMPANIES_LIST_CPP) $(APPROVED_COMPANIES_LIS
 # Approved applicants list object file
 ApprovedApplicantsList.o: $(APPROVED_APPLICANTS_LIST_CPP) $(APPROVED_APPLICANTS_LIST_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVED_APPLICANTS_LIST_CPP) -c -o $@
+
+# Approve applicants form object file
+ApproveApplicantsForm.o: $(APPROVE_APPLICANTS_FORM_CPP) $(APPROVE_APPLICANTS_FORM_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_APPLICANTS_FORM_CPP) -c -o $@
+
+# Approve companies form object file
+ApproveCompaniesForm.o: $(APPROVE_COMPANIES_FORM_CPP) $(APPROVE_COMPANIES_FORM_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_COMPANIES_FORM_CPP) -c -o $@
 
 # MariaDBInit object file
 MariaDBInit.o: $(MARIADBINIT_CPP) $(MARIADBINIT_HPP)
