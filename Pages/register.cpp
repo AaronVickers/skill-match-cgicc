@@ -40,6 +40,9 @@ void RegisterCGIPage::onGET(ostream &os) const {
     os << html() << head(title("Register")) << endl;
     os << body();
 
+    // Page heading
+    os << h1("Register");
+
     // Display register form
     os << RegisterForm();
 

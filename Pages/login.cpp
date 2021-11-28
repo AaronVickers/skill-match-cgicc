@@ -40,6 +40,9 @@ void LoginCGIPage::onGET(ostream &os) const {
     os << html() << head(title("Login")) << endl;
     os << body();
 
+    // Page heading
+    os << h1("Login");
+
     // Display login form
     os << LoginForm();
 

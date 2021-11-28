@@ -82,6 +82,9 @@ void TFACGIPage::onGET(ostream &os) const {
     os << html() << head(title("Two-Factor Authentication")) << endl;
     os << body();
 
+    // Page heading
+    os << h1("Two-Factor Authentication");
+
     // Display 2FA form
     os << TFAForm();
 

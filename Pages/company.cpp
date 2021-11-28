@@ -38,6 +38,9 @@ void CompanyCGIPage::onGET(ostream &os) const {
     os << html() << head(title("Company")) << endl;
     os << body();
 
+    // Page heading
+    os << h1("Company");
+
     // TODO: Use company's skill
     // Display list of approved applicants
     os << ApprovedApplicantsList("test");
