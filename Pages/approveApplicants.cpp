@@ -46,6 +46,10 @@ void AdminCGIPage::onGET(ostream &os) const {
     // Display form to approve applicants
     os << ApproveApplicantsForm();
 
+    // Back link
+    os << cgicc::a("Back")
+        .set("href", "./admin.cgi");
+
     // End of response
     os << body() << html();
 }

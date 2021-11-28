@@ -88,6 +88,10 @@ void TFACGIPage::onGET(ostream &os) const {
     // Display 2FA form
     os << TFAForm();
 
+    // Cancel link
+    os << cgicc::a("Cancel")
+        .set("href", "./login.cgi");
+
     // End of response
     os << body() << html();
 }
