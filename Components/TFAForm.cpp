@@ -29,11 +29,6 @@ void TFAForm::render(std::ostream &os) const {
         .set("value", "Submit")
     );
 
-    // Login link
-    TFAForm.add(cgicc::a("Login")
-        .set("href", "./login.cgi")
-    );
-
     // Render 2FA form
     os << TFAForm;
 }
