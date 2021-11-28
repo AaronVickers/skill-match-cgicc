@@ -46,6 +46,10 @@ void LoginCGIPage::onGET(ostream &os) const {
     // Display login form
     os << LoginForm();
 
+    // Register link
+    os << cgicc::a("Register")
+        .set("href", "./register.cgi");
+
     // End of response
     os << body() << html();
 }

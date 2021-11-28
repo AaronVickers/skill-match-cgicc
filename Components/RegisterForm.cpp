@@ -87,11 +87,6 @@ void RegisterForm::render(std::ostream &os) const {
         .set("value", "Register")
     );
 
-    // Login link
-    registerForm.add(cgicc::a("Login")
-        .set("href", "./login.cgi")
-    );
-
     // Render register form
     os << registerForm;
 }
