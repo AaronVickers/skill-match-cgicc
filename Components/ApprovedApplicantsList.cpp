@@ -34,13 +34,13 @@ void ApprovedApplicantsList::render(std::ostream &os) const {
     }
 
     // List of approved applicants
-    auto ApprovedApplicantsList = cgicc::ul();
+    auto approvedApplicantsList = cgicc::ul();
 
     // Add approved applicants to list
     for (auto &applicant: approvedApplicants.users) {
-        ApprovedApplicantsList.add(cgicc::li(applicant.getUsername()));
+        approvedApplicantsList.add(cgicc::li(applicant.getUsername()));
     }
 
     // Render list of approved applicants
-    os << ApprovedApplicantsList;
+    os << approvedApplicantsList;
 }
