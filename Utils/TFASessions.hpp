@@ -48,4 +48,5 @@ public:
     TFASession *tfaSession;
 };
 
+// End of header guard
 #endif

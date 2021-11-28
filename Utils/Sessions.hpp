@@ -38,4 +38,5 @@ public:
     Session *session;
 };
 
+// End of header guard
 #endif

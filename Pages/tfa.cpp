@@ -1,5 +1,7 @@
-// Initialised headers
-#include "Utils/CgiccInit.hpp"
+// CGI page header
+#include "Utils/CGIPage.hpp"
+
+// Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
 // CGICC headers
@@ -8,16 +10,31 @@
 #include "cgicc/HTMLClasses.h"
 #include "cgicc/HTTPCookie.h"
 
+// Component headers
+#include "Components/TFAForm.hpp"
+
 // Required headers
+#include <ostream>
 #include "Utils/Authentication.hpp"
 
 // Use required namespaces
 using namespace std;
 using namespace cgicc;
 
-void onGET(CgiccInit &cgi) {
+// 2FA CGI page class structure
+class TFACGIPage: public CGIPage {
+private:
+    // On GET request method
+    void onGET(std::ostream &os) const;
+
+    // On POST request method
+    void onPOST(std::ostream &os) const;
+};
+
+// On GET request method
+void TFACGIPage::onGET(ostream &os) const {
     // Get list of cookies
-    vector<HTTPCookie> cookies = cgi.env.getCookieList();
+    vector<HTTPCookie> cookies = env.getCookieList();
 
     // Placeholder for 2FA token cookie and found status
     bool tfaTokenCookieFound = false;
@@ -36,7 +53,7 @@ void onGET(CgiccInit &cgi) {
     // Check if 2FA token cookie was found
     if (!tfaTokenCookieFound) {
         // Redirect to login page with error message
-        cout << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
+        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
 
         return;
     }
@@ -45,7 +62,7 @@ void onGET(CgiccInit &cgi) {
     TFAResult tfaResult = Authentication::getTFAByToken(tfaTokenCookie.getValue());
     if (!tfaResult.getSuccess()) {
         // Redirect to login page with error message
-        cout << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
+        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
 
         return;
     }
@@ -53,7 +70,7 @@ void onGET(CgiccInit &cgi) {
     // Handle already authenticated 2FA session
     if (tfaResult.tfaSession->getAuthenticated()) {
         // Redirect to login page with error message
-        cout << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
+        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
 
         return;
     }
@@ -61,45 +78,21 @@ void onGET(CgiccInit &cgi) {
     // TODO: Handle expired 2FA session
 
     // Required response data
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Two-Factor Authentication")) << endl;
-    cout << body();
-
-    // Form for 2FA
-    auto TFAForm = form();
-    TFAForm.set("method", "post"); // Submit as post request
-
-    // Code input
-    TFAForm.add(cgicc::div()
-        .add(span("Code: "))
-        .add(input()
-            .set("type", "text")
-            .set("name", "code")
-            .set("placeholder", "Code")
-        )
-    );
-
-    // Submit button
-    TFAForm.add(input()
-        .set("type", "submit")
-        .set("value", "Submit")
-    );
-
-    // Login link
-    TFAForm.add(a("Login")
-        .set("href", "./login.cgi")
-    );
+    os << HTTPHTMLHeader() << endl;
+    os << html() << head(title("Two-Factor Authentication")) << endl;
+    os << body();
 
     // Display 2FA form
-    cout << TFAForm;
+    os << TFAForm();
 
     // End of response
-    cout << body() << html();
+    os << body() << html();
 }
 
-void onPOST(CgiccInit &cgi) {
+// On POST request method
+void TFACGIPage::onPOST(ostream &os) const {
     // Get list of cookies
-    vector<HTTPCookie> cookies = cgi.env.getCookieList();
+    vector<HTTPCookie> cookies = env.getCookieList();
 
     // Placeholder for 2FA token cookie and found status
     bool tfaTokenCookieFound = false;
@@ -118,7 +111,7 @@ void onPOST(CgiccInit &cgi) {
     // Check if 2FA token cookie was found
     if (!tfaTokenCookieFound) {
         // Redirect to login page with error message
-        cout << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
+        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
 
         return;
     }
@@ -127,7 +120,7 @@ void onPOST(CgiccInit &cgi) {
     string token = tfaTokenCookie.getValue();
 
     // Get form data
-    string code = cgi.cgi.getElement("code")->getValue();
+    string code = cgi.getElement("code")->getValue();
 
     // Submit 2FA token and code
     TFASubmitResult tfaResult = Authentication::submitTFA(token, code);
@@ -147,7 +140,7 @@ void onPOST(CgiccInit &cgi) {
             redirectLocation = "./tfa.cgi?error=" + errorMsg;
         }
 
-        cout << HTTPRedirectHeader(redirectLocation, false) << endl;
+        os << HTTPRedirectHeader(redirectLocation, false) << endl;
 
         return;
     }
@@ -159,24 +152,15 @@ void onPOST(CgiccInit &cgi) {
     redirectLocation = "./applicant.cgi";
 
     // Redirect to corresponding page with session token cookie
-    cout << HTTPRedirectHeader(redirectLocation, false)
+    os << HTTPRedirectHeader(redirectLocation, false)
         .setCookie(sessionTokenCookie)
         << endl;
 }
 
 // Entry function
 int main(int argc, char *argv[]) {
-    // Initialise CGICC environment
-    CgiccInit cgi = CgiccInit();
-
-    // Handle different request types
-    if (cgi.env.getRequestMethod() == "GET") {
-        // Handle GET request
-        onGET(cgi);
-    } else if (cgi.env.getRequestMethod() == "POST") {
-        // Handle POST request
-        onPOST(cgi);
-    }
+    // Display page
+    cout << TFACGIPage();
 
     return 0;
 }

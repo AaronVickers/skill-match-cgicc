@@ -17,10 +17,15 @@ APPLICANT_CPP = Pages/applicant.cpp
 COMPANY_CPP = Pages/company.cpp
 ADMIN_CPP = Pages/admin.cpp
 
+LOGIN_FORM_CPP = Components/LoginForm.cpp
+LOGIN_FORM_HPP = Components/LoginForm.hpp
+REGISTER_FORM_CPP = Components/RegisterForm.cpp
+REGISTER_FORM_HPP = Components/RegisterForm.hpp
+TFA_FORM_CPP = Components/TFAForm.cpp
+TFA_FORM_HPP = Components/TFAForm.hpp
+
 BUILD_DATABASE_CPP = Tools/build-database.cpp
 
-CGICCINIT_CPP = Utils/CgiccInit.cpp
-CGICCINIT_HPP = Utils/CgiccInit.hpp
 MARIADBINIT_CPP = Utils/MariaDBInit.cpp
 MARIADBINIT_HPP = Utils/MariaDBInit.hpp
 
@@ -38,41 +43,53 @@ TFA_SESSIONS_CPP = Utils/TFASessions.cpp
 TFA_SESSIONS_HPP = Utils/TFASessions.hpp
 SESSIONS_CPP = Utils/Sessions.cpp
 SESSIONS_HPP = Utils/Sessions.hpp
+CGI_COMPONENT_CPP = Utils/CGIComponent.cpp
+CGI_COMPONENT_HPP = Utils/CGIComponent.hpp
+CGI_PAGE_CPP = Utils/CGIPage.cpp
+CGI_PAGE_HPP = Utils/CGIPage.hpp
 
 # All output files
 all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi build-database.out
 
 # Login CGI file
-login.cgi: $(LOGIN_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
+login.cgi: $(LOGIN_CPP) LoginForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) LoginForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Register CGI file
-register.cgi: $(REGISTER_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
+register.cgi: $(REGISTER_CPP) RegisterForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) RegisterForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # 2FA CGI file
-tfa.cgi: $(TFA_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
+tfa.cgi: $(TFA_CPP) TFAForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) TFAForm.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Applicant CGI file
-applicant.cgi: $(APPLICANT_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPLICANT_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
+applicant.cgi: $(APPLICANT_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPLICANT_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Company CGI file
-company.cgi: $(COMPANY_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(COMPANY_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
+company.cgi: $(COMPANY_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(COMPANY_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Admin CGI file
-admin.cgi: $(ADMIN_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(ADMIN_CPP) CgiccInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
+admin.cgi: $(ADMIN_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(ADMIN_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Database build file
 build-database.out: $(BUILD_DATABASE_CPP) Result.o
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(BUILD_DATABASE_CPP) Result.o -o $@ $(LIB_MARIADB)
 
-# CgiccInit object file
-CgiccInit.o: $(CGICCINIT_CPP) $(CGICCINIT_HPP)
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGICCINIT_CPP) -c -o $@
+# Login form object file
+LoginForm.o: $(LOGIN_FORM_CPP) $(LOGIN_FORM_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_FORM_CPP) -c -o $@
+
+# Register form object file
+RegisterForm.o: $(REGISTER_FORM_CPP) $(REGISTER_FORM_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_FORM_CPP) -c -o $@
+
+# 2FA form object file
+TFAForm.o: $(TFA_FORM_CPP) $(TFA_FORM_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_FORM_CPP) -c -o $@
 
 # MariaDBInit object file
 MariaDBInit.o: $(MARIADBINIT_CPP) $(MARIADBINIT_HPP)
@@ -105,6 +122,14 @@ TFASessions.o: $(TFA_SESSIONS_CPP) $(TFA_SESSIONS_HPP)
 # Sessions object file
 Sessions.o: $(SESSIONS_CPP) $(SESSIONS_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(SESSIONS_CPP) -c -o $@
+
+# CGI component object file
+CGIComponent.o: $(CGI_COMPONENT_CPP) $(CGI_COMPONENT_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGI_COMPONENT_CPP) -c -o $@
+
+# CGI page object file
+CGIPage.o: $(CGI_PAGE_CPP) $(CGI_PAGE_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGI_PAGE_CPP) -c -o $@
 
 # Remove output files
 .PHONY: clean

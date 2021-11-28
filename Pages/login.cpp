@@ -1,5 +1,7 @@
-// Initialised headers
-#include "Utils/CgiccInit.hpp"
+// CGI page header
+#include "Utils/CGIPage.hpp"
+
+// Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
 // CGICC headers
@@ -8,67 +10,48 @@
 #include "cgicc/HTMLClasses.h"
 #include "cgicc/HTTPCookie.h"
 
+// Component headers
+#include "Components/LoginForm.hpp"
+
 // Required headers
+#include <ostream>
 #include "Utils/Authentication.hpp"
 
 // Use required namespaces
 using namespace std;
 using namespace cgicc;
 
-void onGET(CgiccInit &cgi) {
+// Login CGI page class structure
+class LoginCGIPage: public CGIPage {
+private:
+    // On GET request method
+    void onGET(std::ostream &os) const;
+
+    // On POST request method
+    void onPOST(std::ostream &os) const;
+};
+
+// On GET request method
+void LoginCGIPage::onGET(ostream &os) const {
     // TODO: Redirect if logged in
 
     // Required response data
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Login")) << endl;
-    cout << body();
-
-    // Form for login
-    auto loginForm = form();
-    loginForm.set("method", "post"); // Submit as post request
-
-    // Username input
-    loginForm.add(cgicc::div()
-        .add(span("Username: "))
-        .add(input()
-            .set("type", "text")
-            .set("name", "username")
-            .set("placeholder", "Username")
-        )
-    );
-
-    // Password input
-    loginForm.add(cgicc::div()
-        .add(span("Password: "))
-        .add(input()
-            .set("type", "password")
-            .set("name", "password")
-            .set("placeholder", "Password")
-        )
-    );
-
-    // Login button
-    loginForm.add(input()
-        .set("type", "submit")
-        .set("value", "Login")
-    );
-
-    // Register link
-    loginForm.add(a("Register")
-        .set("href", "./register.cgi")
-    );
+    os << HTTPHTMLHeader() << endl;
+    os << html() << head(title("Login")) << endl;
+    os << body();
 
     // Display login form
-    cout << loginForm;
+    os << LoginForm();
 
     // End of response
-    cout << body() << html();
+    os << body() << html();
 }
 
-void onPOST(CgiccInit &cgi) {
+// On POST request method
+void LoginCGIPage::onPOST(ostream &os) const {
     // Get form data
-    string username = cgi.cgi.getElement("username")->getValue();
-    string password = cgi.cgi.getElement("password")->getValue();
+    string username = cgi.getElement("username")->getValue();
+    string password = cgi.getElement("password")->getValue();
 
     // Attempt login
     LoginResult loginResult = Authentication::login(username, password);
@@ -80,7 +63,7 @@ void onPOST(CgiccInit &cgi) {
     if (!loginResult.getSuccess()) {
         // Redirect to login page with error message
         redirectLocation = "./login.cgi?error=" + loginResult.getErrorMsg();
-        cout << HTTPRedirectHeader(redirectLocation, false) << endl;
+        os << HTTPRedirectHeader(redirectLocation, false) << endl;
 
         return;
     }
@@ -92,24 +75,15 @@ void onPOST(CgiccInit &cgi) {
 
     // Redirect to 2FA page with 2FA token cookie
     redirectLocation = "./tfa.cgi";
-    cout << HTTPRedirectHeader(redirectLocation, false)
+    os << HTTPRedirectHeader(redirectLocation, false)
         .setCookie(tfaTokenCookie)
         << endl;
 }
 
 // Entry function
 int main(int argc, char *argv[]) {
-    // Initialise CGICC environment
-    CgiccInit cgi = CgiccInit();
-
-    // Handle different request types
-    if (cgi.env.getRequestMethod() == "GET") {
-        // Handle GET request
-        onGET(cgi);
-    } else if (cgi.env.getRequestMethod() == "POST") {
-        // Handle POST request
-        onPOST(cgi);
-    }
+    // Display page
+    cout << LoginCGIPage();
 
     return 0;
 }

@@ -1,5 +1,7 @@
-// Initialised headers
-#include "Utils/CgiccInit.hpp"
+// CGI page header
+#include "Utils/CGIPage.hpp"
+
+// Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
 // CGICC headers
@@ -9,48 +11,64 @@
 #include "cgicc/HTTPCookie.h"
 
 // Required headers
+#include <ostream>
 #include "Utils/Authentication.hpp"
 
 // Use required namespaces
 using namespace std;
 using namespace cgicc;
 
-void onGET(CgiccInit &cgi) {
+// Admin CGI page class structure
+class AdminCGIPage: public CGIPage {
+private:
+    // On GET request method
+    void onGET(std::ostream &os) const;
+
+    // On POST request method
+    void onPOST(std::ostream &os) const;
+};
+
+// On GET request method
+void AdminCGIPage::onGET(ostream &os) const {
     // TODO: Redirect if not logged in as admin
     // TODO: Show list of unapproved applicants
     // TODO: Show list of unapproved companies
 
     // Required response data
-    cout << HTTPHTMLHeader() << endl;
-    cout << html() << head(title("Admin")) << endl;
-    cout << body();
+    os << HTTPHTMLHeader() << endl;
+    os << html() << head(title("Admin")) << endl;
+    os << body();
 
     // Temporary response
-    cout << h1("Admin");
-    cout << p("Temporary response");
+    os << h1("Admin");
+    os << p("Temporary response");
 
     // End of response
-    cout << body() << html();
+    os << body() << html();
 }
 
-void onPOST(CgiccInit &cgi) {
+// On POST request method
+void AdminCGIPage::onPOST(ostream &os) const {
     // TODO: Approve supplied applicants
     // TODO: Approve supplied companies
+    
+    // Required response data
+    os << HTTPHTMLHeader() << endl;
+    os << html() << head(title("Admin")) << endl;
+    os << body();
+
+    // Temporary response
+    os << h1("Admin");
+    os << p("Temporary response");
+
+    // End of response
+    os << body() << html();
 }
 
 // Entry function
 int main(int argc, char *argv[]) {
-    // Initialise CGICC environment
-    CgiccInit cgi = CgiccInit();
-
-    // Handle different request types
-    if (cgi.env.getRequestMethod() == "GET") {
-        // Handle GET request
-        onGET(cgi);
-    } else if (cgi.env.getRequestMethod() == "POST") {
-        // Handle POST request
-        onPOST(cgi);
-    }
+    // Display page
+    cout << AdminCGIPage();
 
     return 0;
 }
