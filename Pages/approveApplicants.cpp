@@ -64,9 +64,17 @@ void AdminCGIPage::onGET(ostream &os) const {
 
 // On POST request method
 void AdminCGIPage::onPOST(ostream &os) const {
-    // TODO: Verify that user is admin
+    // Check if redirect is required
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Administrator");
+    if (authenticationRedirect.getRedirectRequired()) {
+        // Send redirect if required
+        os << authenticationRedirect;
+
+        return;
+    }
+
     // TODO: Approve supplied applicants
-    
+
     // Required response data
     os << HTTPHTMLHeader() << endl;
     os << html() << head(title("Approve Applicants")) << endl;
