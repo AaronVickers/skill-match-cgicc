@@ -17,6 +17,8 @@
 // Required headers
 #include <ostream>
 #include "Utils/Authentication.hpp"
+#include "Utils/Users.hpp"
+#include "Utils/Skills.hpp"
 
 // Use required namespaces
 using namespace std;
@@ -40,7 +42,46 @@ void CompanyCGIPage::onGET(ostream &os) const {
         return;
     }
 
-    // TODO: Get company's skill
+    // Get list of cookies
+    std::vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+
+    // Placeholder for session cookie and found status
+    bool sessionCookieFound = false;
+    cgicc::HTTPCookie sessionCookie;
+
+    // Find session cookie
+    for (auto &cookie: cookies) {
+        if (cookie.getName().compare("SESSION_TOKEN") == 0) {
+            sessionCookieFound = true;
+            sessionCookie = cookie;
+
+            break;
+        }
+    }
+
+    // Check if session cookie doesn't exist
+    if (!sessionCookieFound) {
+        return;
+    }
+
+    // Attempt to get session from token
+    SessionResult sessionResult = Authentication::getSessionByToken(sessionCookie.getValue());
+    if (!sessionResult.getSuccess()) {
+        return;
+    }
+
+    // Get user of session
+    User user = sessionResult.session->getUser();
+
+    // Attempt to get user's skill search
+    SkillSearchResult skillSearchResult = Skills::getUserSkillSearch(user);
+    if (!skillSearchResult.getSuccess()) {
+        return;
+    }
+
+    // Get user's skill
+    Skill skill = skillSearchResult.skillSearch->getSkill();
+    string skillName = skill.getName();
 
     // Required response data
     os << HTTPHTMLHeader() << endl;
@@ -50,7 +91,24 @@ void CompanyCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Company");
 
-    // TODO: Use company's skill
+    // Approved text placeholder
+    string approvedText;
+
+    // Set approved text
+    if (skillSearchResult.skillSearch->getApprovedState()) {
+        // When skill search is approved
+        approvedText = "Your search for '" + skillName + "' has been approved!";
+    } else {
+        // When skill search is not approved
+        approvedText = "Your search for '" + skillName + "' has not yet been approved!";
+    }
+
+    // Display approved text
+    os << p(approvedText);
+
+    // Display sub-heading
+    os << h2("Applicants with the skill you're looking for:");
+
     // Display list of approved applicants
     os << ApprovedApplicantsList("test");
 
