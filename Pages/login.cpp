@@ -85,14 +85,14 @@ void LoginCGIPage::onPOST(ostream &os) const {
 
     // TODO: Send email with 2FA code
 
-    // Create 2FA token cookie
+    // Create 2FA cookie
     string tfaTokenValue = loginResult.tfaSession->getToken() + "; HttpOnly";
-    HTTPCookie tfaTokenCookie = HTTPCookie("TFA_TOKEN", tfaTokenValue);
+    HTTPCookie tfaCookie = HTTPCookie("TFA_TOKEN", tfaTokenValue);
 
-    // Redirect to 2FA page with 2FA token cookie
+    // Redirect to 2FA page with 2FA cookie
     redirectLocation = "./tfa.cgi";
     os << HTTPRedirectHeader(redirectLocation, false)
-        .setCookie(tfaTokenCookie)
+        .setCookie(tfaCookie)
         << endl;
 }
 

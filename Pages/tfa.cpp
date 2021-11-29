@@ -69,22 +69,22 @@ void TFACGIPage::onPOST(ostream &os) const {
     // Get list of cookies
     vector<HTTPCookie> cookies = env.getCookieList();
 
-    // Placeholder for 2FA token cookie and found status
-    bool tfaTokenCookieFound = false;
-    HTTPCookie tfaTokenCookie;
+    // Placeholder for 2FA cookie and found status
+    bool tfaCookieFound = false;
+    HTTPCookie tfaCookie;
 
-    // Find 2FA token cookie
+    // Find 2FA cookie
     for (auto &cookie: cookies) {
         if (cookie.getName().compare("TFA_TOKEN") == 0) {
-            tfaTokenCookieFound = true;
-            tfaTokenCookie = cookie;
+            tfaCookieFound = true;
+            tfaCookie = cookie;
 
             break;
         }
     }
 
-    // Check if 2FA token cookie was found
-    if (!tfaTokenCookieFound) {
+    // Check if 2FA cookie was found
+    if (!tfaCookieFound) {
         // Redirect to login page with error message
         os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
 
@@ -92,7 +92,7 @@ void TFACGIPage::onPOST(ostream &os) const {
     }
 
     // Get token from cookie
-    string token = tfaTokenCookie.getValue();
+    string token = tfaCookie.getValue();
 
     // Get form data
     string code = cgi.getElement("code")->getValue();
@@ -146,7 +146,7 @@ void TFACGIPage::onPOST(ostream &os) const {
     HTTPCookie deleteTFACookie = HTTPCookie("TFA_TOKEN", "DELETED; HttpOnly");
     deleteTFACookie.setRemoved(true);
 
-    // Redirect to corresponding page with session token cookie
+    // Redirect to corresponding page with session cookie
     os << HTTPRedirectHeader(redirectLocation, false)
         .setCookie(sessionCookie)
         .setCookie(deleteTFACookie)
