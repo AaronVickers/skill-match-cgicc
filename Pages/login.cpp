@@ -85,6 +85,7 @@ void LoginCGIPage::onPOST(ostream &os) const {
 
     // TODO: Send email with 2FA code
 
+    // TODO: Make cookie HTTPOnly
     // Create 2FA token cookie
     HTTPCookie tfaTokenCookie = HTTPCookie("TFA_TOKEN", loginResult.tfaSession->getToken());
 

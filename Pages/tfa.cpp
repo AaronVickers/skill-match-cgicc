@@ -120,6 +120,9 @@ void TFACGIPage::onPOST(ostream &os) const {
         return;
     }
 
+    // TODO: Admin hardware token implementation
+
+    // TODO: Make cookie HTTPOnly
     // Create session cookie
     HTTPCookie sessionTokenCookie = HTTPCookie("SESSION_TOKEN", tfaResult.session->getToken());
 

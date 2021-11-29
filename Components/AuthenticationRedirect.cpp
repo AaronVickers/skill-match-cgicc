@@ -64,6 +64,8 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
             return;
         }
 
+        // TODO: Handle expired session
+
         // Set redirect required
         redirectRequired = true;
 
