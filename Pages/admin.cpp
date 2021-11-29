@@ -10,6 +10,9 @@
 #include "cgicc/HTMLClasses.h"
 #include "cgicc/HTTPCookie.h"
 
+// Component headers
+#include "Components/AuthenticationRedirect.hpp"
+
 // Required headers
 #include <ostream>
 #include "Utils/Authentication.hpp"
@@ -27,7 +30,14 @@ private:
 
 // On GET request method
 void AdminCGIPage::onGET(ostream &os) const {
-    // TODO: Redirect if not logged in as admin
+    // Check if redirect is required
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Administrator");
+    if (authenticationRedirect.getRedirectRequired()) {
+        // Send redirect if required
+        os << authenticationRedirect;
+
+        return;
+    }
 
     // Required response data
     os << HTTPHTMLHeader() << endl;

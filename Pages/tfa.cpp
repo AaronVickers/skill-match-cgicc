@@ -12,10 +12,13 @@
 
 // Component headers
 #include "Components/TFAForm.hpp"
+#include "Components/AuthenticationRedirect.hpp"
 
 // Required headers
 #include <ostream>
 #include "Utils/Authentication.hpp"
+#include "Utils/Users.hpp"
+#include "Utils/Roles.hpp"
 
 // Use required namespaces
 using namespace std;
@@ -33,49 +36,14 @@ private:
 
 // On GET request method
 void TFACGIPage::onGET(ostream &os) const {
-    // Get list of cookies
-    vector<HTTPCookie> cookies = env.getCookieList();
-
-    // Placeholder for 2FA token cookie and found status
-    bool tfaTokenCookieFound = false;
-    HTTPCookie tfaTokenCookie;
-
-    // Find 2FA token cookie
-    for (auto &cookie: cookies) {
-        if (cookie.getName().compare("TFA_TOKEN") == 0) {
-            tfaTokenCookieFound = true;
-            tfaTokenCookie = cookie;
-
-            break;
-        }
-    }
-
-    // Check if 2FA token cookie was found
-    if (!tfaTokenCookieFound) {
-        // Redirect to login page with error message
-        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
+    // Check if redirect is required
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect(TFA_PAGE);
+    if (authenticationRedirect.getRedirectRequired()) {
+        // Send redirect if required
+        os << authenticationRedirect;
 
         return;
     }
-
-    // Attempt to get 2FA session from token
-    TFAResult tfaResult = Authentication::getTFAByToken(tfaTokenCookie.getValue());
-    if (!tfaResult.getSuccess()) {
-        // Redirect to login page with error message
-        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
-
-        return;
-    }
-
-    // Handle already authenticated 2FA session
-    if (tfaResult.tfaSession->getAuthenticated()) {
-        // Redirect to login page with error message
-        os << HTTPRedirectHeader("./login.cgi?error=invalid_tfa_session", false) << endl;
-
-        return;
-    }
-
-    // TODO: Handle expired 2FA session
 
     // Required response data
     os << HTTPHTMLHeader() << endl;
@@ -155,8 +123,21 @@ void TFACGIPage::onPOST(ostream &os) const {
     // Create session cookie
     HTTPCookie sessionTokenCookie = HTTPCookie("SESSION_TOKEN", tfaResult.session->getToken());
 
-    // TODO: Get corresponding page for user
-    redirectLocation = "./applicant.cgi";
+    // Get user of session
+    User user = tfaResult.session->getUser();
+
+    // Get role of user
+    Role role = user.getRole();
+    std::string roleName = role.getName();
+
+    // Get corresponding page for user
+    if (roleName.compare("Administrator") == 0) {
+        redirectLocation = "./admin.cgi";
+    } else if (roleName.compare("Company") == 0) {
+        redirectLocation = "./company.cgi";
+    } else if (roleName.compare("Applicant") == 0) {
+        redirectLocation = "./applicant.cgi";
+    }
 
     // Redirect to corresponding page with session token cookie
     os << HTTPRedirectHeader(redirectLocation, false)

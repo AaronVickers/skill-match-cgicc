@@ -12,6 +12,7 @@
 
 // Component headers
 #include "Components/ApprovedApplicantsList.hpp"
+#include "Components/AuthenticationRedirect.hpp"
 
 // Required headers
 #include <ostream>
@@ -30,7 +31,15 @@ private:
 
 // On GET request method
 void CompanyCGIPage::onGET(ostream &os) const {
-    // TODO: Redirect if not logged in as company
+    // Check if redirect is required
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Company");
+    if (authenticationRedirect.getRedirectRequired()) {
+        // Send redirect if required
+        os << authenticationRedirect;
+
+        return;
+    }
+
     // TODO: Get company's skill
 
     // Required response data

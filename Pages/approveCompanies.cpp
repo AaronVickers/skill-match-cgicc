@@ -12,6 +12,7 @@
 
 // Component headers
 #include "Components/ApproveCompaniesForm.hpp"
+#include "Components/AuthenticationRedirect.hpp"
 
 // Required headers
 #include <ostream>
@@ -33,7 +34,14 @@ private:
 
 // On GET request method
 void AdminCGIPage::onGET(ostream &os) const {
-    // TODO: Redirect if not logged in as admin
+    // Check if redirect is required
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Administrator");
+    if (authenticationRedirect.getRedirectRequired()) {
+        // Send redirect if required
+        os << authenticationRedirect;
+
+        return;
+    }
 
     // Required response data
     os << HTTPHTMLHeader() << endl;

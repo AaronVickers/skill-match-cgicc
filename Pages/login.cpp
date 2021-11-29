@@ -12,6 +12,7 @@
 
 // Component headers
 #include "Components/LoginForm.hpp"
+#include "Components/AuthenticationRedirect.hpp"
 
 // Required headers
 #include <ostream>
@@ -33,7 +34,14 @@ private:
 
 // On GET request method
 void LoginCGIPage::onGET(ostream &os) const {
-    // TODO: Redirect if logged in
+    // Check if redirect is required
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect(UNAUTHENTICATED_PAGE);
+    if (authenticationRedirect.getRedirectRequired()) {
+        // Send redirect if required
+        os << authenticationRedirect;
+
+        return;
+    }
 
     // Required response data
     os << HTTPHTMLHeader() << endl;
