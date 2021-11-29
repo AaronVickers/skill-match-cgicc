@@ -122,10 +122,6 @@ void TFACGIPage::onPOST(ostream &os) const {
 
     // TODO: Admin hardware token implementation
 
-    // TODO: Make cookie HTTPOnly
-    // Create session cookie
-    HTTPCookie sessionTokenCookie = HTTPCookie("SESSION_TOKEN", tfaResult.session->getToken());
-
     // Get user of session
     User user = tfaResult.session->getUser();
 
@@ -142,9 +138,18 @@ void TFACGIPage::onPOST(ostream &os) const {
         redirectLocation = "./applicant.cgi";
     }
 
+    // Create session cookie
+    string sessionCookieValue = tfaResult.session->getToken() + "; HttpOnly";
+    HTTPCookie sessionCookie = HTTPCookie("SESSION_TOKEN", sessionCookieValue);
+
+    // Delete 2FA token
+    HTTPCookie deleteTFACookie = HTTPCookie("TFA_TOKEN", "DELETED; HttpOnly");
+    deleteTFACookie.setRemoved(true);
+
     // Redirect to corresponding page with session token cookie
     os << HTTPRedirectHeader(redirectLocation, false)
-        .setCookie(sessionTokenCookie)
+        .setCookie(sessionCookie)
+        .setCookie(deleteTFACookie)
         << endl;
 }
 
