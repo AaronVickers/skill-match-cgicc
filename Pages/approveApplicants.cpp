@@ -13,6 +13,7 @@
 // Component headers
 #include "Components/ApproveApplicantsForm.hpp"
 #include "Components/AuthenticationRedirect.hpp"
+#include "Components/LogOutButton.hpp"
 
 // Required headers
 #include <ostream>
@@ -50,6 +51,9 @@ void AdminCGIPage::onGET(ostream &os) const {
 
     // Page heading
     os << h1("Approve Applicants");
+
+    // Log out button
+    os << LogOutButton();
 
     // Display form to approve applicants
     os << ApproveApplicantsForm();

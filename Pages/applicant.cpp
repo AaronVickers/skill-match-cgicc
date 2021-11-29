@@ -13,6 +13,7 @@
 // Component headers
 #include "Components/ApprovedCompaniesList.hpp"
 #include "Components/AuthenticationRedirect.hpp"
+#include "Components/LogOutButton.hpp"
 
 // Required headers
 #include <ostream>
@@ -90,6 +91,9 @@ void ApplicantCGIPage::onGET(ostream &os) const {
 
     // Page heading
     os << h1("Applicant");
+
+    // Log out button
+    os << LogOutButton();
 
     // Approved text placeholder
     string approvedText;

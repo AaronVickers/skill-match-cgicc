@@ -12,6 +12,7 @@
 
 // Component headers
 #include "Components/AuthenticationRedirect.hpp"
+#include "Components/LogOutButton.hpp"
 
 // Required headers
 #include <ostream>
@@ -46,6 +47,9 @@ void AdminCGIPage::onGET(ostream &os) const {
 
     // Page heading
     os << h1("Admin");
+
+    // Log out button
+    os << LogOutButton();
 
     // Approve applicants link
     os << a("Approve Applicants")
