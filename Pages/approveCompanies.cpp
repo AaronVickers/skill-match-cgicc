@@ -23,8 +23,8 @@
 using namespace std;
 using namespace cgicc;
 
-// Admin CGI page class structure
-class AdminCGIPage: public CGIPage {
+// Approve companies CGI page class structure
+class ApproveCompaniesCGIPage: public CGIPage {
 private:
     // On GET request method
     void onGET(std::ostream &os) const;
@@ -34,7 +34,7 @@ private:
 };
 
 // On GET request method
-void AdminCGIPage::onGET(ostream &os) const {
+void ApproveCompaniesCGIPage::onGET(ostream &os) const {
     // Check if redirect is required
     AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Administrator");
     if (authenticationRedirect.getRedirectRequired()) {
@@ -67,7 +67,7 @@ void AdminCGIPage::onGET(ostream &os) const {
 }
 
 // On POST request method
-void AdminCGIPage::onPOST(ostream &os) const {
+void ApproveCompaniesCGIPage::onPOST(ostream &os) const {
     // Check if redirect is required
     AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Administrator");
     if (authenticationRedirect.getRedirectRequired()) {
@@ -95,7 +95,7 @@ void AdminCGIPage::onPOST(ostream &os) const {
 // Entry function
 int main(int argc, char *argv[]) {
     // Display page
-    cout << AdminCGIPage();
+    cout << ApproveCompaniesCGIPage();
 
     return 0;
 }
