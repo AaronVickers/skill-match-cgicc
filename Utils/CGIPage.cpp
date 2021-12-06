@@ -1,6 +1,9 @@
 // Include header file
 #include "Utils/CGIPage.hpp"
 
+// Initialised CGICC header
+#include "Utils/CGICCInit.hpp"
+
 // CGICC headers
 #include "cgicc/HTTPStatusHeader.h"
 #include "cgicc/HTMLClasses.h"
@@ -25,10 +28,10 @@ void notFound(std::ostream &os) {
 // Render method
 void CGIPage::render(std::ostream &os) const {
     // Handle different request types
-    if (env.getRequestMethod() == "GET") {
+    if (CGICCInit::env->getRequestMethod() == "GET") {
         // Handle GET request
         onGET(os);
-    } else if (env.getRequestMethod() == "POST") {
+    } else if (CGICCInit::env->getRequestMethod() == "POST") {
         // Handle POST request
         onPOST(os);
     }

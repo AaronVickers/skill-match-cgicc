@@ -1,6 +1,9 @@
 // CGI page header
 #include "Utils/CGIPage.hpp"
 
+// Initialised CGICC header
+#include "Utils/CGICCInit.hpp"
+
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
@@ -44,7 +47,7 @@ void CompanyCGIPage::onGET(ostream &os) const {
     }
 
     // Get list of cookies
-    std::vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+    std::vector<cgicc::HTTPCookie> cookies = CGICCInit::env->getCookieList();
 
     // Placeholder for session cookie and found status
     bool sessionCookieFound = false;

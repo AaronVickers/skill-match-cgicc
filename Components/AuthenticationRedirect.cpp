@@ -1,6 +1,9 @@
 // Include header file
 #include "Components/AuthenticationRedirect.hpp"
 
+// Initialised CGICC header
+#include "Utils/CGICCInit.hpp"
+
 // CGICC headers
 #include "cgicc/HTTPRedirectHeader.h"
 #include "cgicc/HTMLClasses.h"
@@ -33,7 +36,7 @@ bool AuthenticationRedirect::getRedirectRequired() {
 AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
     if (pageType == UNAUTHENTICATED_PAGE) {
         // Get list of cookies
-        std::vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+        std::vector<cgicc::HTTPCookie> cookies = CGICCInit::env->getCookieList();
 
         // Placeholder for session cookie and found status
         bool sessionCookieFound = false;
@@ -86,7 +89,7 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
         }
     } else if (pageType == TFA_PAGE) {
         // Get list of cookies
-        std::vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+        std::vector<cgicc::HTTPCookie> cookies = CGICCInit::env->getCookieList();
 
         // Placeholder for 2FA cookie and found status
         bool tfaCookieFound = false;
@@ -137,7 +140,7 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
 // Constructor for required role
 AuthenticationRedirect::AuthenticationRedirect(std::string requiredRole) {
     // Get list of cookies
-    std::vector<cgicc::HTTPCookie> cookies = env.getCookieList();
+    std::vector<cgicc::HTTPCookie> cookies = CGICCInit::env->getCookieList();
 
     // Placeholder for session cookie and found status
     bool sessionCookieFound = false;

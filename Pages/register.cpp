@@ -1,6 +1,9 @@
 // CGI page header
 #include "Utils/CGIPage.hpp"
 
+// Initialised CGICC header
+#include "Utils/CGICCInit.hpp"
+
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
@@ -65,11 +68,11 @@ void RegisterCGIPage::onGET(ostream &os) const {
 // On POST request method
 void RegisterCGIPage::onPOST(ostream &os) const {
     // Get form data
-    string username = cgi.getElement("username")->getValue();
-    string email = cgi.getElement("email")->getValue();
-    string password = cgi.getElement("password")->getValue();
-    string skill = cgi.getElement("skill")->getValue();
-    string role = cgi.getElement("role")->getValue();
+    string username = CGICCInit::cgi->getElement("username")->getValue();
+    string email = CGICCInit::cgi->getElement("email")->getValue();
+    string password = CGICCInit::cgi->getElement("password")->getValue();
+    string skill = CGICCInit::cgi->getElement("skill")->getValue();
+    string role = CGICCInit::cgi->getElement("role")->getValue();
 
     // Attempt to register
     RegisterResult registerResult = Authentication::registerAccount(username, email, password, skill, role);

@@ -1,6 +1,9 @@
 // CGI page header
 #include "Utils/CGIPage.hpp"
 
+// Initialised CGICC header
+#include "Utils/CGICCInit.hpp"
+
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
@@ -67,7 +70,7 @@ void TFACGIPage::onGET(ostream &os) const {
 // On POST request method
 void TFACGIPage::onPOST(ostream &os) const {
     // Get list of cookies
-    vector<HTTPCookie> cookies = env.getCookieList();
+    vector<HTTPCookie> cookies = CGICCInit::env->getCookieList();
 
     // Placeholder for 2FA cookie and found status
     bool tfaCookieFound = false;
@@ -95,7 +98,7 @@ void TFACGIPage::onPOST(ostream &os) const {
     string token = tfaCookie.getValue();
 
     // Get form data
-    string code = cgi.getElement("code")->getValue();
+    string code = CGICCInit::cgi->getElement("code")->getValue();
 
     // Submit 2FA token and code
     TFASubmitResult tfaResult = Authentication::submitTFA(token, code);

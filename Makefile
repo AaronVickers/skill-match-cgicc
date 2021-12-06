@@ -41,6 +41,8 @@ LOG_OUT_BUTTON_HPP = Components/LogOutButton.hpp
 
 BUILD_DATABASE_CPP = Tools/build-database.cpp
 
+CGICCINIT_CPP = Utils/CGICCInit.cpp
+CGICCINIT_HPP = Utils/CGICCInit.hpp
 MARIADBINIT_CPP = Utils/MariaDBInit.cpp
 MARIADBINIT_HPP = Utils/MariaDBInit.hpp
 
@@ -67,36 +69,36 @@ CGI_PAGE_HPP = Utils/CGIPage.hpp
 all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi approveApplicants.cgi approveCompanies.cgi logout.cgi build-database.out
 
 # Login CGI file
-login.cgi: $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+login.cgi: $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Register CGI file
-register.cgi: $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+register.cgi: $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # 2FA CGI file
-tfa.cgi: $(TFA_CPP) TFAForm.o AuthenticationRedirect.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) TFAForm.o AuthenticationRedirect.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+tfa.cgi: $(TFA_CPP) TFAForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) TFAForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Applicant CGI file
-applicant.cgi: $(APPLICANT_CPP) ApprovedCompaniesList.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPLICANT_CPP) ApprovedCompaniesList.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+applicant.cgi: $(APPLICANT_CPP) ApprovedCompaniesList.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPLICANT_CPP) ApprovedCompaniesList.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Company CGI file
-company.cgi: $(COMPANY_CPP) ApprovedApplicantsList.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(COMPANY_CPP) ApprovedApplicantsList.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+company.cgi: $(COMPANY_CPP) ApprovedApplicantsList.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(COMPANY_CPP) ApprovedApplicantsList.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Admin CGI file
-admin.cgi: $(ADMIN_CPP) AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(ADMIN_CPP) AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+admin.cgi: $(ADMIN_CPP) AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(ADMIN_CPP) AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Approve applicants CGI file
-approveApplicants.cgi: $(APPROVE_APPLICANTS_CPP) ApproveApplicantsForm.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_APPLICANTS_CPP) ApproveApplicantsForm.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+approveApplicants.cgi: $(APPROVE_APPLICANTS_CPP) ApproveApplicantsForm.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_APPLICANTS_CPP) ApproveApplicantsForm.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Approve companies CGI file
-approveCompanies.cgi: $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o AuthenticationRedirect.o LogOutButton.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+approveCompanies.cgi: $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Log out CGI file
 logout.cgi: $(LOG_OUT_CPP) CGIComponent.o CGIPage.o
@@ -141,6 +143,10 @@ AuthenticationRedirect.o: $(AUTHENTICATION_REDIRECT_CPP) $(AUTHENTICATION_REDIRE
 # Log out button object file
 LogOutButton.o: $(LOG_OUT_BUTTON_CPP) $(LOG_OUT_BUTTON_CPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOG_OUT_BUTTON_CPP) -c -o $@
+
+# CGICCInit object file
+CGICCInit.o: $(CGICCINIT_CPP) $(CGICCINIT_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CGICCINIT_CPP) -c -o $@
 
 # MariaDBInit object file
 MariaDBInit.o: $(MARIADBINIT_CPP) $(MARIADBINIT_HPP)

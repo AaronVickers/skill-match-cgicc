@@ -1,6 +1,9 @@
 // CGI page header
 #include "Utils/CGIPage.hpp"
 
+// Initialised CGICC header
+#include "Utils/CGICCInit.hpp"
+
 // Initialised MariaDB header
 #include "Utils/MariaDBInit.hpp"
 
@@ -65,8 +68,8 @@ void LoginCGIPage::onGET(ostream &os) const {
 // On POST request method
 void LoginCGIPage::onPOST(ostream &os) const {
     // Get form data
-    string username = cgi.getElement("username")->getValue();
-    string password = cgi.getElement("password")->getValue();
+    string username = CGICCInit::cgi->getElement("username")->getValue();
+    string password = CGICCInit::cgi->getElement("password")->getValue();
 
     // Attempt login
     LoginResult loginResult = Authentication::login(username, password);
