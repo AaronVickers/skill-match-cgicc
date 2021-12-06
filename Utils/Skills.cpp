@@ -185,10 +185,10 @@ SkillSearch::SkillSearch(int _skillSearchId) {
     sql::ResultSet *res;
 
     // Prepare skill search select statement
-    pstmt = db.conn->prepareStatement("SELECT * FROM Skills WHERE SkillId=?");
+    pstmt = db.conn->prepareStatement("SELECT * FROM SkillSearches WHERE SkillSearchId=?");
 
     // Execute query
-    pstmt->setInt(1, skillId);
+    pstmt->setInt(1, skillSearchId);
     res = pstmt->executeQuery();
 
     // Delete statement from memory
