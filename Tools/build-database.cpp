@@ -100,9 +100,9 @@ int main(int argc, char *argv[]) {
             ); \
         ");
 
-        // Create 'TFASession' table
+        // Create 'TFASessions' table
         stmt->execute(" \
-            CREATE TABLE TFASession ( \
+            CREATE TABLE TFASessions ( \
                 TFASessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL UNIQUE, \

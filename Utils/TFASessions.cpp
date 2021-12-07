@@ -68,7 +68,7 @@ void TFASession::increaseFailedAttempts() {
 
     // Prepare 2FA update statement
     pstmt = db.conn->prepareStatement(" \
-        UPDATE TFASession \
+        UPDATE TFASessions \
         SET FailedAttempts=FailedAttempts+1 \
         WHERE TFASessionId=? \
     ");
@@ -78,7 +78,7 @@ void TFASession::increaseFailedAttempts() {
     pstmt->execute();
 
     // Prepare 2FA select statement
-    pstmt = db.conn->prepareStatement("SELECT * FROM TFASession WHERE TFASessionId=?");
+    pstmt = db.conn->prepareStatement("SELECT * FROM TFASessions WHERE TFASessionId=?");
 
     // Execute query
     pstmt->setInt(1, tfaSessionId);
@@ -114,7 +114,7 @@ void TFASession::setAuthenticated(bool newAuthenticated) {
 
     // Prepare 2FA update statement
     pstmt = db.conn->prepareStatement(" \
-        UPDATE TFASession \
+        UPDATE TFASessions \
         SET Authenticated=? \
         WHERE TFASessionId=? \
     ");
@@ -178,7 +178,7 @@ TFASession::TFASession(int _tfaSessionId) {
     sql::ResultSet *res;
 
     // Prepare 2FA select statement
-    pstmt = db.conn->prepareStatement("SELECT * FROM TFASession WHERE TFASessionId=?");
+    pstmt = db.conn->prepareStatement("SELECT * FROM TFASessions WHERE TFASessionId=?");
 
     // Execute query
     pstmt->setInt(1, tfaSessionId);
@@ -232,7 +232,7 @@ TFASession::TFASession(User user) {
     sql::ResultSet *res;
 
     // Prepare 2FA insert
-    pstmt = db.conn->prepareStatement("INSERT INTO TFASession (UserId, Token, Code, StartTime, FailedAttempts, Authenticated) VALUES (?,?,?,?,?,?)");
+    pstmt = db.conn->prepareStatement("INSERT INTO TFASessions (UserId, Token, Code, StartTime, FailedAttempts, Authenticated) VALUES (?,?,?,?,?,?)");
 
     // Insert values into statement
     pstmt->setInt(1, userId);

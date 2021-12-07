@@ -354,7 +354,7 @@ TFAResult Authentication::getTFAByToken(std::string token) {
         sql::ResultSet *res;
 
         // Prepare 2FA select statement
-        pstmt = db.conn->prepareStatement("SELECT * FROM TFASession WHERE Token=?");
+        pstmt = db.conn->prepareStatement("SELECT * FROM TFASessions WHERE Token=?");
 
         // Execute query
         pstmt->setString(1, token);
