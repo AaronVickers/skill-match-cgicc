@@ -19,6 +19,7 @@
 
 // Required headers
 #include <ostream>
+#include <fstream>
 #include "Utils/Authentication.hpp"
 
 // Use required namespaces
@@ -86,7 +87,16 @@ void LoginCGIPage::onPOST(ostream &os) const {
         return;
     }
 
-    // TODO: Send email with 2FA code
+    // Alternative to sending email with 2FA code
+    // Open mail spool file in append mode
+    ofstream mailSpoolFile;
+    mailSpoolFile.open("/var/www/mail_spool.txt");
+
+    // Write 2FA code to mail spool file
+    mailSpoolFile << loginResult.tfaSession->getCode() << endl;
+
+    // Close mail spool file
+    mailSpoolFile.close();
 
     // Create 2FA cookie
     string tfaTokenValue = loginResult.tfaSession->getToken() + "; HttpOnly";
