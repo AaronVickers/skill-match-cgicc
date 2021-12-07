@@ -7,6 +7,7 @@
 // Required headers
 #include <ostream>
 #include "Utils/Users.hpp"
+#include "Utils/Roles.hpp"
 
 // Render method
 void RegisterForm::render(std::ostream &os) const {
@@ -60,19 +61,19 @@ void RegisterForm::render(std::ostream &os) const {
 
     // Add admin to roles selection if admin doesn't exist
     if (!Users::doesAdminExist()) {
-        roleSelect.add(cgicc::option("Administrator")
-            .set("value", "Administrator")
+        roleSelect.add(cgicc::option(ADMINISTRATOR_ROLE_NAME)
+            .set("value", ADMINISTRATOR_ROLE_NAME)
         );
     }
 
     // Add applicant to roles selection
     roleSelect.add(cgicc::option("Applicant")
-        .set("value", "Applicant")
+        .set("value", APPLICANT_ROLE_NAME)
     );
 
     // Add company to roles selection
     roleSelect.add(cgicc::option("Company")
-        .set("value", "Company")
+        .set("value", COMPANY_ROLE_NAME)
     );
 
     // Role dropdown

@@ -7,6 +7,7 @@
 // Required headers
 #include <iostream>
 #include <vector>
+#include "Utils/Roles.hpp"
 
 // Use required namespaces
 using namespace std;
@@ -36,9 +37,9 @@ MariaDBInit::~MariaDBInit() {
 int main(int argc, char *argv[]) {
     // Vector of roles
     vector<string> roles;
-    roles.emplace_back("Administrator");
-    roles.emplace_back("Company");
-    roles.emplace_back("Applicant");
+    roles.emplace_back(ADMINISTRATOR_ROLE_NAME);
+    roles.emplace_back(APPLICANT_ROLE_NAME);
+    roles.emplace_back(COMPANY_ROLE_NAME);
 
     // Get confirmation of operation
     string confirm;
@@ -79,7 +80,7 @@ int main(int argc, char *argv[]) {
         stmt->execute(" \
             CREATE TABLE Roles ( \
                 RoleId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
-                Name VARCHAR(128) NOT NULL UNIQUE, \
+                Name ENUM('" ADMINISTRATOR_ROLE_NAME "', '" APPLICANT_ROLE_NAME "', '" COMPANY_ROLE_NAME "') NOT NULL UNIQUE, \
                 PRIMARY KEY (RoleId) \
             ); \
         ");

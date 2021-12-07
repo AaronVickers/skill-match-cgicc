@@ -17,6 +17,7 @@
 // Required headers
 #include <ostream>
 #include "Utils/Authentication.hpp"
+#include "Utils/Roles.hpp"
 
 // Use required namespaces
 using namespace std;
@@ -32,7 +33,7 @@ private:
 // On GET request method
 void AdminCGIPage::onGET(ostream &os) const {
     // Check if redirect is required
-    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Administrator");
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect(ADMINISTRATOR_ROLE_NAME);
     if (authenticationRedirect.getRedirectRequired()) {
         // Send redirect if required
         os << authenticationRedirect;

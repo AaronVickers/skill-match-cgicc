@@ -99,7 +99,7 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     RoleResult roleResult = Roles::getRoleByName(role);
 
     // Admin role validation
-    if (role.compare("Administrator") == 0) {
+    if (role.compare(ADMINISTRATOR_ROLE_NAME) == 0) {
         // Only allow 1 admin
         if (Users::doesAdminExist()) {
             roleResult.setError("An administrator already exists.");

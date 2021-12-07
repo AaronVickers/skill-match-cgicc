@@ -266,7 +266,7 @@ bool Users::doesAdminExist() {
         ");
 
         // Execute query
-        pstmt->setString(1, "Administrator");
+        pstmt->setString(1, ADMINISTRATOR_ROLE_NAME);
         res = pstmt->executeQuery();
 
         // Check if result has any rows

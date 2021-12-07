@@ -2,6 +2,11 @@
 #ifndef ROLES_H_
 #define ROLES_H_
 
+// Define environment constants
+#define ADMINISTRATOR_ROLE_NAME "Administrator"
+#define APPLICANT_ROLE_NAME "Applicant"
+#define COMPANY_ROLE_NAME "Company"
+
 // Required headers
 #include <string>
 #include "Utils/Result.hpp"

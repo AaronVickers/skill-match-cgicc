@@ -23,6 +23,7 @@
 #include "Utils/Authentication.hpp"
 #include "Utils/Users.hpp"
 #include "Utils/Skills.hpp"
+#include "Utils/Roles.hpp"
 
 // Use required namespaces
 using namespace std;
@@ -38,7 +39,7 @@ private:
 // On GET request method
 void ApplicantCGIPage::onGET(ostream &os) const {
     // Check if redirect is required
-    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect("Applicant");
+    AuthenticationRedirect authenticationRedirect = AuthenticationRedirect(APPLICANT_ROLE_NAME);
     if (authenticationRedirect.getRedirectRequired()) {
         // Send redirect if required
         os << authenticationRedirect;

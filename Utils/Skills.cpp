@@ -9,6 +9,7 @@
 
 // Required headers
 #include <string>
+#include "Utils/Roles.hpp"
 
 int Skill::getSkillId() {
     // Return skill ID
@@ -355,7 +356,7 @@ UsersResult Skills::getApprovedApplicantsBySkill(std::string skillName) {
 
         // Execute query
         pstmt->setBoolean(1, true);
-        pstmt->setString(2, "Applicant");
+        pstmt->setString(2, APPLICANT_ROLE_NAME);
         pstmt->setString(3, skillName);
         res = pstmt->executeQuery();
 
@@ -429,7 +430,7 @@ UsersResult Skills::getApprovedCompaniesBySkill(std::string skillName) {
 
         // Execute query
         pstmt->setBoolean(1, true);
-        pstmt->setString(2, "Company");
+        pstmt->setString(2, COMPANY_ROLE_NAME);
         pstmt->setString(3, skillName);
         res = pstmt->executeQuery();
 
@@ -502,7 +503,7 @@ SkillSearchesResult Skills::getUnapprovedApplicantSkillSearches() {
 
         // Execute query
         pstmt->setBoolean(1, false);
-        pstmt->setString(2, "Applicant");
+        pstmt->setString(2, APPLICANT_ROLE_NAME);
         res = pstmt->executeQuery();
 
         // Delete statement from memory
@@ -572,7 +573,7 @@ SkillSearchesResult Skills::getUnapprovedCompanySkillSearches() {
 
         // Execute query
         pstmt->setBoolean(1, false);
-        pstmt->setString(2, "Company");
+        pstmt->setString(2, COMPANY_ROLE_NAME);
         res = pstmt->executeQuery();
 
         // Delete statement from memory

@@ -133,12 +133,12 @@ void TFACGIPage::onPOST(ostream &os) const {
     std::string roleName = role.getName();
 
     // Get corresponding page for user
-    if (roleName.compare("Administrator") == 0) {
+    if (roleName.compare(ADMINISTRATOR_ROLE_NAME) == 0) {
         redirectLocation = "./admin.cgi";
-    } else if (roleName.compare("Company") == 0) {
-        redirectLocation = "./company.cgi";
-    } else if (roleName.compare("Applicant") == 0) {
+    } else if (roleName.compare(APPLICANT_ROLE_NAME) == 0) {
         redirectLocation = "./applicant.cgi";
+    } else if (roleName.compare(COMPANY_ROLE_NAME) == 0) {
+        redirectLocation = "./company.cgi";
     }
 
     // Create session cookie
