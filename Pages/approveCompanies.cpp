@@ -57,8 +57,11 @@ void ApproveCompaniesCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Approve Companies");
 
-    // Log out button
-    os << LogOutButton();
+    // Log out from session button
+    os << LogOutButton(false);
+
+    // Log out from all sessions button
+    os << LogOutButton(true);
 
     // Display form to approve companies
     os << ApproveCompaniesForm();

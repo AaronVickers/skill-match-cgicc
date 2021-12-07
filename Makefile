@@ -101,8 +101,8 @@ approveCompanies.cgi: $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o Authentica
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(APPROVE_COMPANIES_CPP) ApproveCompaniesForm.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Log out CGI file
-logout.cgi: $(LOG_OUT_CPP) CGICCInit.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOG_OUT_CPP) CGICCInit.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+logout.cgi: $(LOG_OUT_CPP) CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOG_OUT_CPP) CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Database build file
 build-database.out: $(BUILD_DATABASE_CPP) Result.o

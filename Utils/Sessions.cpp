@@ -185,3 +185,39 @@ Session::Session(int _sessionId, int _userId, std::string _token, time_t _startT
     startTime = _startTime;
     active = _active;
 }
+
+bool Sessions::deactivateAllSessions(User user) {
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // Handle connection error
+    if (!db.getSuccess()) {
+        return false;
+    }
+
+    // Attempt to complete operation
+    try {
+        // SQL statement variable
+        sql::PreparedStatement *pstmt;
+
+        // Prepare session update statement
+        pstmt = db.conn->prepareStatement(" \
+            UPDATE Sessions \
+            SET Active=? \
+            WHERE UserId=? \
+        ");
+
+        // Execute query
+        pstmt->setBoolean(1, false);
+        pstmt->setInt(2, user.getUserId());
+        pstmt->execute();
+
+        // Delete statement from memory
+        delete pstmt;
+    } catch (sql::SQLException &sql_error) {
+        // Handle SQL exception
+        return false;
+    }
+
+    return true;
+}

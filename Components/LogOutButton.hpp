@@ -8,8 +8,14 @@
 // Log out button CGI component class structure
 class LogOutButton: public CGIComponent {
 private:
+    // Button type
+    bool fromAllSessions;
+
     // Render method
     void render(std::ostream &os) const;
+public:
+    // Constructor to determine button type
+    LogOutButton(bool _fromAllSessions);
 };
 
 // End of header guard

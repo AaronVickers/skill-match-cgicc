@@ -96,8 +96,11 @@ void ApplicantCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Applicant");
 
-    // Log out button
-    os << LogOutButton();
+    // Log out from session button
+    os << LogOutButton(false);
+
+    // Log out from all sessions button
+    os << LogOutButton(true);
 
     // Approved text placeholder
     string approvedText;

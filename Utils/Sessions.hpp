@@ -43,5 +43,10 @@ public:
     Session *session;
 };
 
+// Sessions namespace
+namespace Sessions {
+    bool deactivateAllSessions(User user);
+}
+
 // End of header guard
 #endif

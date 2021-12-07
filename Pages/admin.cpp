@@ -49,8 +49,11 @@ void AdminCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Admin");
 
-    // Log out button
-    os << LogOutButton();
+    // Log out from session button
+    os << LogOutButton(false);
+
+    // Log out from all sessions button
+    os << LogOutButton(true);
 
     // Approve applicants link
     os << a("Approve Applicants")

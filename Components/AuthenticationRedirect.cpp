@@ -67,6 +67,13 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
             return;
         }
 
+        // Handle inactive session
+        if (!sessionResult.session->getActive()) {
+            redirectRequired = false;
+
+            return;
+        }
+
         // Handle expired session
         if (sessionResult.session->isExpired()) {
             redirectRequired = false;
@@ -180,6 +187,14 @@ AuthenticationRedirect::AuthenticationRedirect(std::string requiredRole) {
     if (!sessionResult.getSuccess()) {
         redirectRequired = true;
         redirectLocation = "./login.cgi?error=invalid_session";
+
+        return;
+    }
+
+    // Handle inactive session
+    if (!sessionResult.session->getActive()) {
+        redirectRequired = true;
+        redirectLocation = "./login.cgi?error=inactive_session";
 
         return;
     }
