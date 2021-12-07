@@ -287,4 +287,3 @@ bool Users::doesAdminExist() {
 
     return false;
 }
-// Initialise attributes with passed parameters
