@@ -57,6 +57,9 @@ void ApproveApplicantsCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Approve Applicants");
 
+    // Page description
+    os << p("Approve pending applicant skill searches.");
+
     // Log out from session button
     os << LogOutButton(false);
 

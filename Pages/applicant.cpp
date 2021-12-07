@@ -96,6 +96,9 @@ void ApplicantCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Applicant");
 
+    // Page description
+    os << p("View companies looking for your skill.");
+
     // Log out from session button
     os << LogOutButton(false);
 

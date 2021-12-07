@@ -54,6 +54,9 @@ void RegisterCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Register");
 
+    // Page description
+    os << p("Register an account.");
+
     // Display register form
     os << RegisterForm();
 

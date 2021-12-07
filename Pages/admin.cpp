@@ -49,6 +49,9 @@ void AdminCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Admin");
 
+    // Page description
+    os << p("Admin panel.");
+
     // Log out from session button
     os << LogOutButton(false);
 

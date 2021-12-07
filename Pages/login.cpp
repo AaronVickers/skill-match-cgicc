@@ -67,6 +67,9 @@ void LoginCGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Login");
 
+    // Page description
+    os << p("Log in to your account.");
+
     // Display login form
     os << LoginForm();
 

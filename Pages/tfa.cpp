@@ -56,6 +56,12 @@ void TFACGIPage::onGET(ostream &os) const {
     // Page heading
     os << h1("Two-Factor Authentication");
 
+    // Page description
+    os << p("Check the email you signed up with to get your code.");
+
+    // Warning
+    os << p("Warning: Your account will be locked after 5 failed attempts.");
+
     // Display 2FA form
     os << TFAForm();
 
