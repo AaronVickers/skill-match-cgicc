@@ -102,17 +102,20 @@ void LoginCGIPage::onPOST(ostream &os) const {
     // Get logged in user
     User user = loginResult.tfaSession->getUser();
 
-    // TODO: Send email with 2FA code
+    // Create 2FA code message
     Poco::Net::MailMessage tfaCodeMsg;
+    // Set 2FA code message details
     tfaCodeMsg.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT, user.getEmail(), user.getUsername()));
     tfaCodeMsg.setSender(TFA_SENDER_NAME " <" TFA_SENDER_EMAIL ">");
     tfaCodeMsg.setSubject("2FA Code");
     tfaCodeMsg.setContent(loginResult.tfaSession->getCode());
 
-    Poco::Net::SMTPClientSession smtp(SMTP_SERVER, SMTP_TARGET_PORT);
-    smtp.login(Poco::Net::SMTPClientSession::AUTH_LOGIN, SMTP_LOGIN, SMTP_PASSWORD);
-    smtp.sendMessage(tfaCodeMsg);
-    smtp.close();
+    // Create SMTP client instance with specified SMTP server
+    Poco::Net::SMTPClientSession smtpClient(SMTP_SERVER, SMTP_TARGET_PORT);
+    // Authenticate and send 2FA code message
+    smtpClient.login(Poco::Net::SMTPClientSession::AUTH_LOGIN, SMTP_LOGIN, SMTP_PASSWORD); 
+    smtpClient.sendMessage(tfaCodeMsg);
+    smtpClient.close();
 
     // Create 2FA cookie
     string tfaTokenValue = loginResult.tfaSession->getToken() + "; HttpOnly";
