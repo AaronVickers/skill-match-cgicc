@@ -4,12 +4,14 @@
 
 // Define environment constants
 #define MAX_TFA_ATTEMPTS 5
+#define MAX_TFA_SESSION_LENGTH 300
 
 // MariaDB header
 #include <mariadb/conncpp.hpp>
 
 // Required headers
 #include <string>
+#include <ctime>
 #include "Utils/Users.hpp"
 
 // 2FA class structure
@@ -19,7 +21,7 @@ private:
     int userId;
     std::string token;
     std::string code;
-    sql::Timestamp startTime;
+    time_t startTime;
     int failedAttempts;
     bool authenticated;
 public:
@@ -28,7 +30,7 @@ public:
     User getUser();
     std::string getToken();
     std::string getCode();
-    sql::Timestamp getStartTime();
+    time_t getStartTime();
     int getFailedAttempts();
     bool getAuthenticated();
 
@@ -36,10 +38,11 @@ public:
     void setAuthenticated(bool _authenticated);
 
     bool submitCode(std::string _code);
+    bool isExpired();
 
     TFASession(int _tfaSessionId);
     TFASession(User user);
-    TFASession(int _tfaSessionId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime, int _failedAttempts, bool _authenticated);
+    TFASession(int _tfaSessionId, int _userId, std::string _token, std::string _code, time_t _startTime, int _failedAttempts, bool _authenticated);
 };
 
 // 2FA result class structure

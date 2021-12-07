@@ -8,6 +8,7 @@
 #define PARALLELISM 1
 #define HASH_LEN 32
 #define ENCODED_LEN 128
+#define PEPPER "RANDOM_PEPPER_VALUE"
 
 // MariaDB header
 #include <mariadb/conncpp.hpp>

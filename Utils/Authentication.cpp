@@ -267,7 +267,12 @@ TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
         return tfaSubmitResult;
     }
 
-    // TODO: Handle expired 2FA session
+    // Handle expired 2FA session
+    if (tfaResult.tfaSession->isExpired()) {
+        tfaSubmitResult.setError("expired_tfa_session");
+
+        return tfaSubmitResult;
+    }
 
     // Check code format
     std::regex codeRegex = std::regex("^[0-9]{6}$");
@@ -367,7 +372,7 @@ TFAResult Authentication::getTFAByToken(std::string token) {
         int userId = res->getInt("UserId");
         std::string token = res->getString("Token").c_str();
         std::string code = res->getString("Code").c_str();
-        sql::Timestamp startTime = res->getString("StartTime");
+        time_t startTime = res->getInt("StartTime");
         int failedAttempts = res->getInt("FailedAttempts");
         bool authenticated = res->getBoolean("Authenticated");
 
@@ -437,7 +442,7 @@ SessionResult Authentication::getSessionByToken(std::string token) {
         int sessionId = res->getInt("SessionId");
         int userId = res->getInt("UserId");
         std::string token = res->getString("Token").c_str();
-        sql::Timestamp startTime = res->getString("StartTime");
+        time_t startTime = res->getInt("StartTime");
         bool active = res->getBoolean("Active");
 
         // Store session in result

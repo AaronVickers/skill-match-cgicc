@@ -67,7 +67,12 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
             return;
         }
 
-        // TODO: Handle expired session
+        // Handle expired session
+        if (sessionResult.session->isExpired()) {
+            redirectRequired = false;
+
+            return;
+        }
 
         // Set redirect required
         redirectRequired = true;
@@ -130,7 +135,13 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
             return;
         }
 
-        // TODO: Handle expired 2FA session
+        // Handle expired 2FA session
+        if (tfaResult.tfaSession->isExpired()) {
+            redirectRequired = true;
+            redirectLocation = "./login.cgi?error=expired_tfa_session";
+
+            return;
+        }
 
         // Set redirect not required
         redirectRequired = false;
@@ -169,6 +180,14 @@ AuthenticationRedirect::AuthenticationRedirect(std::string requiredRole) {
     if (!sessionResult.getSuccess()) {
         redirectRequired = true;
         redirectLocation = "./login.cgi?error=invalid_session";
+
+        return;
+    }
+
+    // Handle expired session
+    if (sessionResult.session->isExpired()) {
+        redirectRequired = true;
+        redirectLocation = "./login.cgi?error=expired_session";
 
         return;
     }

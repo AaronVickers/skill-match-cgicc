@@ -9,6 +9,7 @@
 
 // Required headers
 #include <string>
+#include <ctime>
 #include "Utils/Authentication.hpp"
 #include "Utils/Users.hpp"
 #include "Utils/sole.hpp"
@@ -41,7 +42,7 @@ std::string TFASession::getCode() {
     return code;
 }
 
-sql::Timestamp TFASession::getStartTime() {
+time_t TFASession::getStartTime() {
     // Return start time
     return startTime;
 }
@@ -150,6 +151,20 @@ bool TFASession::submitCode(std::string _code) {
     return true;
 }
 
+bool TFASession::isExpired() {
+    // Calculate session length
+    double tfaSessionLength = std::difftime(std::time(0), startTime);
+
+    // Check if session length is over expiry time
+    if (tfaSessionLength > MAX_TFA_SESSION_LENGTH) {
+        // Return true for expired
+        return true;
+    }
+
+    // Return false for not expired
+    return false;
+}
+
 TFASession::TFASession(int _tfaSessionId) {
     // Set 2FA ID
     tfaSessionId = _tfaSessionId;
@@ -179,7 +194,7 @@ TFASession::TFASession(int _tfaSessionId) {
     userId = res->getInt("UserId");
     token = res->getString("Token").c_str();
     code = res->getString("Code").c_str();
-    startTime = res->getString("StartTime");
+    startTime = res->getInt("StartTime");
     failedAttempts = res->getInt("FailedAttempts");
     authenticated = res->getBoolean("Authenticated");
 
@@ -198,8 +213,8 @@ TFASession::TFASession(User user) {
     // Generate and set code
     code = Authentication::generateTFACode(6);
 
-    // TODO: Get and set start time
-    startTime = "TEMP";
+    // Get and set start time
+    startTime = std::time(0);
 
     // Set failed attempts
     failedAttempts = 0;
@@ -223,7 +238,7 @@ TFASession::TFASession(User user) {
     pstmt->setInt(1, userId);
     pstmt->setString(2, token);
     pstmt->setString(3, code);
-    pstmt->setString(4, startTime);
+    pstmt->setInt(4, startTime);
     pstmt->setInt(5, failedAttempts);
     pstmt->setBoolean(6, authenticated);
 
@@ -246,7 +261,7 @@ TFASession::TFASession(User user) {
     delete res;
 }
 
-TFASession::TFASession(int _tfaSessionId, int _userId, std::string _token, std::string _code, sql::Timestamp _startTime, int _failedAttempts, bool _authenticated) {
+TFASession::TFASession(int _tfaSessionId, int _userId, std::string _token, std::string _code, time_t _startTime, int _failedAttempts, bool _authenticated) {
     // Initialise all attributes with passed parameters
     tfaSessionId = _tfaSessionId;
     userId = _userId;

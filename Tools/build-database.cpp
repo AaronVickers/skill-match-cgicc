@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
                 UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL UNIQUE, \
                 Code VARCHAR(6) NOT NULL, \
-                StartTime VARCHAR(128) NOT NULL, \
+                StartTime INT UNSIGNED NOT NULL, \
                 FailedAttempts INT NOT NULL, \
                 Authenticated BOOLEAN NOT NULL, \
                 PRIMARY KEY (TFASessionId), \
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
                 SessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
                 UserId INT UNSIGNED NOT NULL, \
                 Token VARCHAR(128) NOT NULL UNIQUE, \
-                StartTime VARCHAR(128) NOT NULL, \
+                StartTime INT UNSIGNED NOT NULL, \
                 Active BOOLEAN NOT NULL, \
                 PRIMARY KEY (SessionId), \
                 FOREIGN KEY (UserId) REFERENCES Users(UserId) \
