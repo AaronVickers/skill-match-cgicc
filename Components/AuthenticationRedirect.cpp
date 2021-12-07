@@ -81,11 +81,18 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
             return;
         }
 
-        // Set redirect required
-        redirectRequired = true;
-
         // Get user of session
         User user = sessionResult.session->getUser();
+
+        // Handle locked account
+        if (user.getLocked()) {
+            redirectRequired = false;
+
+            return;
+        }
+
+        // Set redirect required
+        redirectRequired = true;
 
         // Get role of user
         Role role = user.getRole();
@@ -209,6 +216,14 @@ AuthenticationRedirect::AuthenticationRedirect(std::string requiredRole) {
 
     // Get user of session
     User user = sessionResult.session->getUser();
+
+    // Handle locked account
+    if (user.getLocked()) {
+        redirectRequired = true;
+        redirectLocation = "./login.cgi?error=account_locked";
+
+        return;
+    }
 
     // Get role of user
     Role role = user.getRole();
