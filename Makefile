@@ -2,6 +2,7 @@
 LIB_CGICC = -lcgicc
 LIB_MARIADB = -lmariadbcpp
 LIB_ARGON2 = -largon2
+LIB_POCO = -lPocoNet
 
 # Compiler options
 CXX = g++
@@ -70,7 +71,7 @@ all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi approveA
 
 # Login CGI file
 login.cgi: $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS) $(LIB_POCO)
 
 # Register CGI file
 register.cgi: $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o

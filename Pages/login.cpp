@@ -1,3 +1,11 @@
+// Define environment constants
+#define SMTP_SERVER "smtp.example.com"
+#define SMTP_TARGET_PORT 587
+#define SMTP_LOGIN "username@example.com"
+#define SMTP_PASSWORD "SMTP_PASSWORD"
+#define TFA_SENDER_NAME "Skill Match"
+#define TFA_SENDER_EMAIL "username@example.com"
+
 // CGI page header
 #include "Utils/CGIPage.hpp"
 
@@ -13,13 +21,17 @@
 #include "cgicc/HTMLClasses.h"
 #include "cgicc/HTTPCookie.h"
 
+// POCO headers
+#include "Poco/Net/MailMessage.h"
+#include "Poco/Net/MailRecipient.h"
+#include "Poco/Net/SMTPClientSession.h"
+
 // Component headers
 #include "Components/LoginForm.hpp"
 #include "Components/AuthenticationRedirect.hpp"
 
 // Required headers
 #include <ostream>
-#include <fstream>
 #include "Utils/Authentication.hpp"
 
 // Use required namespaces
@@ -87,16 +99,20 @@ void LoginCGIPage::onPOST(ostream &os) const {
         return;
     }
 
-    // Alternative to sending email with 2FA code
-    // Open mail spool file in append mode
-    ofstream mailSpoolFile;
-    mailSpoolFile.open("/var/www/mail_spool.txt");
+    // Get logged in user
+    User user = loginResult.tfaSession->getUser();
 
-    // Write 2FA code to mail spool file
-    mailSpoolFile << loginResult.tfaSession->getCode() << endl;
+    // TODO: Send email with 2FA code
+    Poco::Net::MailMessage tfaCodeMsg;
+    tfaCodeMsg.addRecipient(Poco::Net::MailRecipient(Poco::Net::MailRecipient::PRIMARY_RECIPIENT, user.getEmail(), user.getUsername()));
+    tfaCodeMsg.setSender(TFA_SENDER_NAME " <" TFA_SENDER_EMAIL ">");
+    tfaCodeMsg.setSubject("2FA Code");
+    tfaCodeMsg.setContent(loginResult.tfaSession->getCode());
 
-    // Close mail spool file
-    mailSpoolFile.close();
+    Poco::Net::SMTPClientSession smtp(SMTP_SERVER, SMTP_TARGET_PORT);
+    smtp.login(Poco::Net::SMTPClientSession::AUTH_LOGIN, SMTP_LOGIN, SMTP_PASSWORD);
+    smtp.sendMessage(tfaCodeMsg);
+    smtp.close();
 
     // Create 2FA cookie
     string tfaTokenValue = loginResult.tfaSession->getToken() + "; HttpOnly";
