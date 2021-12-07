@@ -305,7 +305,7 @@ TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
         // Update locked status
         tfaUser.setLocked(true);
 
-        // Set error 
+        // Set error
         tfaSubmitResult.setError("account_locked");
 
         // Return result
