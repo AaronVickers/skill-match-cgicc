@@ -125,8 +125,11 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     sole::uuid saltUUID = sole::uuid4();
     std::string salt = saltUUID.str();
 
+    // Add pepper to password
+    std::string pepperedPassword = PEPPER + password;
+
     // Variables for password hashing
-    const char *passwordCString = password.c_str();
+    const char *pepperedPasswordCString = pepperedPassword.c_str();
     const char *saltCString = salt.c_str();
     char hashCString[HASH_LEN];
     char encodedCString[ENCODED_LEN];
@@ -134,7 +137,7 @@ RegisterResult Authentication::registerAccount(std::string username, std::string
     // Hash password
     int hashSuccess = argon2_hash(
         T_COST, M_COST, PARALLELISM,
-        passwordCString, password.length(),
+        pepperedPasswordCString, pepperedPassword.length(),
         saltCString, salt.length(),
         hashCString, HASH_LEN,
         encodedCString, ENCODED_LEN,
@@ -202,14 +205,17 @@ LoginResult Authentication::login(std::string username, std::string password) {
     // Get password hash encoded
     std::string passwordHashEncoded = userResult.user->getPasswordHashEncoded();
 
+    // Add pepper to password
+    std::string pepperedPassword = PEPPER + password;
+
     // Variables for password hashing
-    const char *passwordCString = password.c_str();
+    const char *pepperedPasswordCString = pepperedPassword.c_str();
     const char *encodedCString = passwordHashEncoded.c_str();
 
     // Verify password
     int verifySuccess = argon2_verify(
         encodedCString,
-        passwordCString, password.length(),
+        pepperedPasswordCString, pepperedPassword.length(),
         Argon2_id
     );
 
