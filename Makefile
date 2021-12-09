@@ -41,6 +41,7 @@ LOG_OUT_BUTTON_CPP = Components/LogOutButton.cpp
 LOG_OUT_BUTTON_HPP = Components/LogOutButton.hpp
 
 BUILD_DATABASE_CPP = Tools/build-database.cpp
+POPULATE_DATABASE_CPP = Tools/populate-database.cpp
 
 CGICCINIT_CPP = Utils/CGICCInit.cpp
 CGICCINIT_HPP = Utils/CGICCInit.hpp
@@ -67,7 +68,7 @@ CGI_PAGE_CPP = Utils/CGIPage.cpp
 CGI_PAGE_HPP = Utils/CGIPage.hpp
 
 # All output files
-all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi approveApplicants.cgi approveCompanies.cgi logout.cgi build-database.out
+all: login.cgi register.cgi tfa.cgi applicant.cgi company.cgi admin.cgi approveApplicants.cgi approveCompanies.cgi logout.cgi build-database.out populate-database.out
 
 # Login CGI file
 login.cgi: $(LOGIN_CPP) LoginForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
@@ -108,6 +109,10 @@ logout.cgi: $(LOG_OUT_CPP) CGICCInit.o MariaDBInit.o Authentication.o Result.o R
 # Database build file
 build-database.out: $(BUILD_DATABASE_CPP) Result.o
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(BUILD_DATABASE_CPP) Result.o -o $@ $(LIB_MARIADB)
+
+# Database population file
+populate-database.out: $(POPULATE_DATABASE_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(POPULATE_DATABASE_CPP) MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o -o $@ $(LDFLAGS)
 
 # Login form object file
 LoginForm.o: $(LOGIN_FORM_CPP) $(LOGIN_FORM_HPP)
