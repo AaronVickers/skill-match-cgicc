@@ -124,7 +124,7 @@ void CompanyCGIPage::onGET(ostream &os) const {
     os << h2("Applicants with the skill you're looking for:");
 
     // Display list of approved applicants
-    os << ApprovedApplicantsList("test");
+    os << ApprovedApplicantsList(skillName);
 
     // End of response
     os << body() << html();
