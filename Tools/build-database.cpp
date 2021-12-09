@@ -115,6 +115,20 @@ int main(int argc, char *argv[]) {
             ); \
         ");
 
+        // Create 'TOTPSessions' table
+        stmt->execute(" \
+            CREATE TABLE TOTPSessions ( \
+                TOTPSessionId INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT, \
+                UserId INT UNSIGNED NOT NULL, \
+                Token VARCHAR(128) NOT NULL UNIQUE, \
+                StartTime INT UNSIGNED NOT NULL, \
+                FailedAttempts INT NOT NULL, \
+                Authenticated BOOLEAN NOT NULL, \
+                PRIMARY KEY (TOTPSessionId), \
+                FOREIGN KEY (UserId) REFERENCES Users(UserId) \
+            ); \
+        ");
+
         // Create 'Sessions' table
         stmt->execute(" \
             CREATE TABLE Sessions ( \

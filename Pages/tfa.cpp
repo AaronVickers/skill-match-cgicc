@@ -129,37 +129,55 @@ void TFACGIPage::onPOST(ostream &os) const {
         return;
     }
 
-    // TODO: Admin hardware token implementation
+    // Check if TOTP is required
+    if (tfaResult.totpRequired) {
+        // Set redirect location to TOTP page
+        redirectLocation = "./totp.cgi";
 
-    // Get user of session
-    User user = tfaResult.session->getUser();
+        // Create TOTP cookie
+        string totpCookieValue = tfaResult.totpSession->getToken() + "; HttpOnly";
+        HTTPCookie totpCookie = HTTPCookie("TOTP_TOKEN", totpCookieValue);
 
-    // Get role of user
-    Role role = user.getRole();
-    std::string roleName = role.getName();
+        // Delete 2FA token
+        HTTPCookie deleteTFACookie = HTTPCookie("TFA_TOKEN", "DELETED; HttpOnly");
+        deleteTFACookie.setRemoved(true);
 
-    // Get corresponding page for user
-    if (roleName.compare(ADMINISTRATOR_ROLE_NAME) == 0) {
-        redirectLocation = "./admin.cgi";
-    } else if (roleName.compare(APPLICANT_ROLE_NAME) == 0) {
-        redirectLocation = "./applicant.cgi";
-    } else if (roleName.compare(COMPANY_ROLE_NAME) == 0) {
-        redirectLocation = "./company.cgi";
+        // Redirect to corresponding page with TOTP cookie
+        os << HTTPRedirectHeader(redirectLocation, false)
+            .setCookie(totpCookie)
+            .setCookie(deleteTFACookie)
+            << endl;
+    } else {
+        // Get user of session
+        User user = tfaResult.session->getUser();
+
+        // Get role of user
+        Role role = user.getRole();
+        std::string roleName = role.getName();
+
+        // Get corresponding page for user
+        if (roleName.compare(ADMINISTRATOR_ROLE_NAME) == 0) {
+            redirectLocation = "./admin.cgi";
+        } else if (roleName.compare(APPLICANT_ROLE_NAME) == 0) {
+            redirectLocation = "./applicant.cgi";
+        } else if (roleName.compare(COMPANY_ROLE_NAME) == 0) {
+            redirectLocation = "./company.cgi";
+        }
+
+        // Create session cookie
+        string sessionCookieValue = tfaResult.session->getToken() + "; HttpOnly";
+        HTTPCookie sessionCookie = HTTPCookie("SESSION_TOKEN", sessionCookieValue);
+
+        // Delete 2FA token
+        HTTPCookie deleteTFACookie = HTTPCookie("TFA_TOKEN", "DELETED; HttpOnly");
+        deleteTFACookie.setRemoved(true);
+
+        // Redirect to corresponding page with session cookie
+        os << HTTPRedirectHeader(redirectLocation, false)
+            .setCookie(sessionCookie)
+            .setCookie(deleteTFACookie)
+            << endl;
     }
-
-    // Create session cookie
-    string sessionCookieValue = tfaResult.session->getToken() + "; HttpOnly";
-    HTTPCookie sessionCookie = HTTPCookie("SESSION_TOKEN", sessionCookieValue);
-
-    // Delete 2FA token
-    HTTPCookie deleteTFACookie = HTTPCookie("TFA_TOKEN", "DELETED; HttpOnly");
-    deleteTFACookie.setRemoved(true);
-
-    // Redirect to corresponding page with session cookie
-    os << HTTPRedirectHeader(redirectLocation, false)
-        .setCookie(sessionCookie)
-        .setCookie(deleteTFACookie)
-        << endl;
 }
 
 // Entry function

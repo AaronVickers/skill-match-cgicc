@@ -7,7 +7,8 @@
 
 enum PageType {
     UNAUTHENTICATED_PAGE,
-    TFA_PAGE
+    TFA_PAGE,
+    TOTP_PAGE
 };
 
 // Authentication redirect CGI component class structure

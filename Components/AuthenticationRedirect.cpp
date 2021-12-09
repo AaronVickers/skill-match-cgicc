@@ -132,7 +132,7 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
             return;
         }
 
-        // Attempt to get 2FA session from
+        // Attempt to get 2FA session from 2FA cookie
         TFAResult tfaResult = Authentication::getTFAByToken(tfaCookie.getValue());
         if (!tfaResult.getSuccess()) {
             redirectRequired = true;
@@ -153,6 +153,59 @@ AuthenticationRedirect::AuthenticationRedirect(PageType pageType) {
         if (tfaResult.tfaSession->isExpired()) {
             redirectRequired = true;
             redirectLocation = "./login.cgi?error=expired_tfa_session";
+
+            return;
+        }
+
+        // Set redirect not required
+        redirectRequired = false;
+    } else if (pageType == TOTP_PAGE) {
+        // Get list of cookies
+        std::vector<cgicc::HTTPCookie> cookies = CGICCInit::env->getCookieList();
+
+        // Placeholder for TOTP cookie and found status
+        bool totpCookieFound = false;
+        cgicc::HTTPCookie totpCookie;
+
+        // Find TOTP cookie
+        for (auto &cookie: cookies) {
+            if (cookie.getName().compare("TOTP_TOKEN") == 0) {
+                totpCookieFound = true;
+                totpCookie = cookie;
+
+                break;
+            }
+        }
+
+        // Check if TOTP cookie was found
+        if (!totpCookieFound) {
+            redirectRequired = true;
+            redirectLocation = "./login.cgi?error=invalid_totp_session";
+
+            return;
+        }
+
+        // Attempt to get TOTP session from TOTP cookie
+        TOTPResult totpResult = Authentication::getTOTPByToken(totpCookie.getValue());
+        if (!totpResult.getSuccess()) {
+            redirectRequired = true;
+            redirectLocation = "./login.cgi?error=invalid_totp_session";
+
+            return;
+        }
+
+        // Handle already authenticated TOTP session
+        if (totpResult.totpSession->getAuthenticated()) {
+            redirectRequired = true;
+            redirectLocation = "./login.cgi?error=invalid_totp_session";
+
+            return;
+        }
+
+        // Handle expired TOTP session
+        if (totpResult.totpSession->isExpired()) {
+            redirectRequired = true;
+            redirectLocation = "./login.cgi?error=expired_totp_session";
 
             return;
         }

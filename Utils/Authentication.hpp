@@ -18,6 +18,7 @@
 #include "Utils/Result.hpp"
 #include "Utils/Users.hpp"
 #include "Utils/TFASessions.hpp"
+#include "Utils/TOTPSessions.hpp"
 #include "Utils/Sessions.hpp"
 
 // Forward declaration of required classes
@@ -30,7 +31,15 @@ class RegisterResult: public UserResult {};
 class LoginResult: public TFAResult {};
 
 // 2FA result class structure
-class TFASubmitResult: public SessionResult {};
+class TFASubmitResult: public Result {
+public:
+    bool totpRequired;
+    TOTPSession *totpSession;
+    Session *session;
+};
+
+// TOTP result class structure
+class TOTPSubmitResult: public SessionResult {};
 
 // Authentication namespace
 namespace Authentication {
@@ -40,11 +49,17 @@ namespace Authentication {
 
     TFASubmitResult submitTFA(std::string token, std::string code);
 
+    TOTPSubmitResult submitTOTP(std::string token, std::string code);
+
     TFAResult getTFAByToken(std::string token);
+
+    TOTPResult getTOTPByToken(std::string token);
 
     SessionResult getSessionByToken(std::string token);
 
     std::string generateTFACode(int codeLength);
+
+    std::string generateTOTPCode(int seed, int codeLength);
 }
 
 // End of header guard

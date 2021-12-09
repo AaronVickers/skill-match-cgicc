@@ -321,14 +321,114 @@ TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
         return tfaSubmitResult;
     }
 
-    // Generate authenticated session
-    tfaSubmitResult.session = new Session(tfaUser);
+    // Check if user is admin
+    if (tfaUser.getRole().getName().compare(ADMINISTRATOR_ROLE_NAME) == 0) {
+        // Set TOTP required to true
+        tfaSubmitResult.totpRequired = true;
+
+        // Generate TOTP session
+        tfaSubmitResult.totpSession = new TOTPSession(tfaUser);
+    } else {
+        // Set TOTP required to false
+        tfaSubmitResult.totpRequired = false;
+
+        // Generate authenticated session
+        tfaSubmitResult.session = new Session(tfaUser);
+    }
 
     // Set result success
     tfaSubmitResult.setSuccess(true);
 
     // Return result
     return tfaSubmitResult;
+}
+
+TOTPSubmitResult Authentication::submitTOTP(std::string token, std::string code) {
+    // Create result
+    TOTPSubmitResult totpSubmitResult = TOTPSubmitResult();
+
+    // Verify that all fields have a value
+    if (token.empty()) {
+        totpSubmitResult.setError("missing_token");
+
+        return totpSubmitResult;
+    } else if (code.empty()) {
+        totpSubmitResult.setError("missing_code");
+
+        return totpSubmitResult;
+    }
+
+    // Attempt to get TOTP session from token
+    TOTPResult totpResult = Authentication::getTOTPByToken(token);
+    if (!totpResult.getSuccess()) {
+        totpSubmitResult.setError("invalid_totp_session");
+
+        return totpSubmitResult;
+    }
+
+    // Handle already authenticated TOTP session
+    if (totpResult.totpSession->getAuthenticated()) {
+        totpSubmitResult.setError("invalid_totp_session");
+
+        return totpSubmitResult;
+    }
+
+    // Handle expired TOTP session
+    if (totpResult.totpSession->isExpired()) {
+        totpSubmitResult.setError("expired_totp_session");
+
+        return totpSubmitResult;
+    }
+
+    // Check code format
+    std::regex codeRegex = std::regex("^[0-9]{6}$");
+    std::smatch codeMatch;
+    bool codeValid = std::regex_match(code, codeMatch, codeRegex);
+
+    // Handle invalid code format
+    if (!codeValid) {
+        // Set error
+        totpSubmitResult.setError("invalid_code");
+
+        // Return result
+        return totpSubmitResult;
+    }
+
+    // Submit code
+    bool wasValidCode = totpResult.totpSession->submitCode(code);
+
+    // Get user
+    User totpUser = totpResult.totpSession->getUser();
+
+    // Lock account after failed guesses
+    if (totpResult.totpSession->getFailedAttempts() >= MAX_TOTP_ATTEMPTS) {
+        // Update locked status
+        totpUser.setLocked(true);
+
+        // Set error
+        totpSubmitResult.setError("account_locked");
+
+        // Return result
+        return totpSubmitResult;
+    }
+
+    // Validate TOTP code
+    if (!wasValidCode) {
+        // Set error
+        totpSubmitResult.setError("invalid_code");
+
+        // Return result
+        return totpSubmitResult;
+    }
+
+    // Generate authenticated session
+    totpSubmitResult.session = new Session(totpUser);
+
+    // Set result success
+    totpSubmitResult.setSuccess(true);
+
+    // Return result
+    return totpSubmitResult;
 }
 
 TFAResult Authentication::getTFAByToken(std::string token) {
@@ -400,6 +500,76 @@ TFAResult Authentication::getTFAByToken(std::string token) {
 
     // Return result
     return tfaResult;
+}
+
+TOTPResult Authentication::getTOTPByToken(std::string token) {
+    // Create result
+    TOTPResult totpResult = TOTPResult();
+
+    // Initialise MariaDB connection
+    MariaDBInit db = MariaDBInit();
+
+    // Handle connection error
+    if (!db.getSuccess()) {
+        totpResult.setError(db.getErrorMsg());
+
+        // Return result
+        return totpResult;
+    }
+
+    // Attempt to complete operation
+    try {
+        // SQL statement variable
+        sql::PreparedStatement *pstmt;
+        // SQL result variable
+        sql::ResultSet *res;
+
+        // Prepare TOTP select statement
+        pstmt = db.conn->prepareStatement("SELECT * FROM TOTPSessions WHERE Token=?");
+
+        // Execute query
+        pstmt->setString(1, token);
+        res = pstmt->executeQuery();
+
+        // Delete statement from memory
+        delete pstmt;
+
+        // Error if no rows selected
+        if (!res->next()) {
+            // Delete result from memory
+            delete res;
+
+            totpResult.setError("TOTP session with provided token doesn't exist.");
+
+            return totpResult;
+        }
+
+        // Get TOTP details from row
+        int totpSessionId = res->getInt("TOTPSessionId");
+        int userId = res->getInt("UserId");
+        std::string token = res->getString("Token").c_str();
+        time_t startTime = res->getInt("StartTime");
+        int failedAttempts = res->getInt("FailedAttempts");
+        bool authenticated = res->getBoolean("Authenticated");
+
+        // Store TOTP session in result
+        totpResult.totpSession = new TOTPSession(totpSessionId, userId, token, startTime, failedAttempts, authenticated);
+
+        // Delete result from memory
+        delete res;
+    } catch (sql::SQLException &sql_error) {
+        // Handle SQL exception
+        totpResult.setError(sql_error.what());
+
+        // Return result
+        return totpResult;
+    }
+
+    // Set result success
+    totpResult.setSuccess(true);
+
+    // Return result
+    return totpResult;
 }
 
 SessionResult Authentication::getSessionByToken(std::string token) {
@@ -490,4 +660,24 @@ std::string Authentication::generateTFACode(int codeLength) {
 
     // Return 2FA code
     return tfaCode;
+}
+
+std::string Authentication::generateTOTPCode(int seed, int codeLength) {
+    // Use Mersenne Twister engine with provided seed
+    std::mt19937 generator(seed);
+
+    // Define distribution of characters
+    std::uniform_int_distribution<int> distribution('0', '9');
+
+    // First TOTP code string filled with null bytes
+    std::string totpCode(codeLength, '\0');
+
+    // For each character in TOTP code string
+    for(auto &dis: totpCode) {
+        // Replace with random character
+        dis = distribution(generator);
+    }
+
+    // Return TOTP code
+    return totpCode;
 }
