@@ -5,6 +5,7 @@
 #include "Utils/MariaDBInit.hpp"
 
 // Required headers
+#include <iostream>
 #include "Utils/Authentication.hpp"
 #include "Utils/Roles.hpp"
 
@@ -13,6 +14,9 @@ using namespace std;
 
 // Entry function
 int main(int argc, char *argv[]) {
+    // Notify user that operation has started
+    cout << "Populating database..." << endl;
+
     // Register admin account
     Authentication::registerAccount("Admin", MY_EMAIL, "admin1234", "Admin", ADMINISTRATOR_ROLE_NAME);
 
@@ -35,6 +39,9 @@ int main(int argc, char *argv[]) {
     Authentication::registerAccount("COMP6", MY_EMAIL, "comp1234", "Marketing", COMPANY_ROLE_NAME);
     Authentication::registerAccount("Comp7", MY_EMAIL, "comp1234", "marketING", COMPANY_ROLE_NAME);
     Authentication::registerAccount("comp8", MY_EMAIL, "comp1234", "marketing", COMPANY_ROLE_NAME);
+
+    // Notify user that operation was completed
+    cout << "Operation complete." << endl;
 
     return 0;
 }
