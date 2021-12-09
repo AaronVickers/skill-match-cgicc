@@ -25,8 +25,8 @@ LOGIN_FORM_CPP = Components/LoginForm.cpp
 LOGIN_FORM_HPP = Components/LoginForm.hpp
 REGISTER_FORM_CPP = Components/RegisterForm.cpp
 REGISTER_FORM_HPP = Components/RegisterForm.hpp
-TFA_FORM_CPP = Components/TFAForm.cpp
-TFA_FORM_HPP = Components/TFAForm.hpp
+CODE_FORM_CPP = Components/CodeForm.cpp
+CODE_FORM_HPP = Components/CodeForm.hpp
 APPROVED_COMPANIES_LIST_CPP = Components/ApprovedCompaniesList.cpp
 APPROVED_COMPANIES_LIST_HPP = Components/ApprovedCompaniesList.hpp
 APPROVED_APPLICANTS_LIST_CPP = Components/ApprovedApplicantsList.cpp
@@ -79,8 +79,8 @@ register.cgi: $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o CGICCInit.
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_CPP) RegisterForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # 2FA CGI file
-tfa.cgi: $(TFA_CPP) TFAForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) TFAForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
+tfa.cgi: $(TFA_CPP) CodeForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_CPP) CodeForm.o AuthenticationRedirect.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o -o $@ $(LDFLAGS)
 
 # Applicant CGI file
 applicant.cgi: $(APPLICANT_CPP) ApprovedCompaniesList.o AuthenticationRedirect.o LogOutButton.o CGICCInit.o MariaDBInit.o Authentication.o Result.o Roles.o Skills.o Users.o TFASessions.o Sessions.o CGIComponent.o CGIPage.o
@@ -122,9 +122,9 @@ LoginForm.o: $(LOGIN_FORM_CPP) $(LOGIN_FORM_HPP)
 RegisterForm.o: $(REGISTER_FORM_CPP) $(REGISTER_FORM_HPP)
 	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(REGISTER_FORM_CPP) -c -o $@
 
-# 2FA form object file
-TFAForm.o: $(TFA_FORM_CPP) $(TFA_FORM_HPP)
-	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(TFA_FORM_CPP) -c -o $@
+# Code form object file
+CodeForm.o: $(CODE_FORM_CPP) $(CODE_FORM_HPP)
+	$(CXX) $(CXXFLAGS) $(INC_DIRS) $(CODE_FORM_CPP) -c -o $@
 
 # Approved companies list object file
 ApprovedCompaniesList.o: $(APPROVED_COMPANIES_LIST_CPP) $(APPROVED_COMPANIES_LIST_HPP)

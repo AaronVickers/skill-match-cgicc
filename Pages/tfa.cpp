@@ -14,7 +14,7 @@
 #include "cgicc/HTTPCookie.h"
 
 // Component headers
-#include "Components/TFAForm.hpp"
+#include "Components/CodeForm.hpp"
 #include "Components/AuthenticationRedirect.hpp"
 
 // Required headers
@@ -62,8 +62,8 @@ void TFACGIPage::onGET(ostream &os) const {
     // Warning
     os << p("Warning: Your account will be locked after 5 failed attempts.");
 
-    // Display 2FA form
-    os << TFAForm();
+    // Display code form
+    os << CodeForm();
 
     // Cancel link
     os << cgicc::a("Cancel")
