@@ -297,11 +297,11 @@ TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
     // Submit code
     bool wasValidCode = tfaResult.tfaSession->submitCode(code);
 
+    // Get user
+    User tfaUser = tfaResult.tfaSession->getUser();
+
     // Lock account after failed guesses
     if (tfaResult.tfaSession->getFailedAttempts() >= MAX_TFA_ATTEMPTS) {
-        // Get user
-        User tfaUser = tfaResult.tfaSession->getUser();
-
         // Update locked status
         tfaUser.setLocked(true);
 
@@ -322,7 +322,7 @@ TFASubmitResult Authentication::submitTFA(std::string token, std::string code) {
     }
 
     // Generate authenticated session
-    tfaSubmitResult.session = new Session(tfaResult.tfaSession->getUser());
+    tfaSubmitResult.session = new Session(tfaUser);
 
     // Set result success
     tfaSubmitResult.setSuccess(true);
