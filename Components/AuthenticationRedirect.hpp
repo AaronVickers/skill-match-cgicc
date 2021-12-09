@@ -10,7 +10,7 @@ enum PageType {
     TFA_PAGE
 };
 
-// 2FA form CGI component class structure
+// Authentication redirect CGI component class structure
 class AuthenticationRedirect: public CGIComponent {
 private:
     // Whether redirect is required
